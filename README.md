@@ -2,47 +2,42 @@
 
 ## Title:
 
-Web application with chatbot assistant and OCR capability
+Web application for optimal productivity by utilizing chatbot assistant.
 
-## Vision
+## Vision:
 
-The goal of this project is to create a web application that provides a chatbot assistant and OCR (optical character recognition) capability to assist users with various tasks such as report writing, translation, and school-related activities.
+Our goal is to combine the highly relevant concept of text generating AI models with a clever UI for planning, structuring and optimizing your daily workflow. The solution shall offer image scanning for text generation using OCR (optical character recognition).
 
-## Core functions
+## Core functions:
 
-User authentication and authorization using Django authentication system
-Integration with OpenAI API to provide chatbot assistance
-OCR capability to read text from images
-Report writing assistance using the chatbot
-Translation assistance using the chatbot
-User-friendly interface with responsive design using React and Next.js
+- Automated writing assistant.
+- An OCR feature that allows users to easily extract text from images and convert them into editable documents.
+- A summarization tool that helps users quickly digest large amounts of text.
+- An automatic language translation tool that enables users to communicate with people in other countries and cultures.
+- An overview tool that helps users organize and prioritize their tasks, using an intuitive KanBan-inspired UI. This board can be customized to meet your exact needs.
 
-# Technological Specification:
+# Technological Specification
 
-## Client framework
+## Client framework:
 
-React TypeScript Next.js
+- Next.js
+- React (TypeScript)
 
-## Server framework/backend service setup
+## Server framework/backend service setup:
 
-Django
+- Django (REST framework)
+- OpenAI API
+- OCR library (Tesseract.js for example)
 
-## Architecture
+## Technology Choices:
 
-The backend will provide RESTful APIs for the frontend to consume. The frontend will be responsible for rendering the user interface and interacting with the backend APIs. The chatbot assistant will be integrated with the OpenAI API, and OCR functionality will be implemented using a library such as Tesseract.js.
+React is a highly popular front end framework. To build the react app using TypeScript instead of plain JavaScript provides easy debugging and stability, something we value since the app also integrates third party API:s. Furthermore, instead of a normal React app we have chosen Next.js, mostly because it comes with index routing which simplifies code structure and project configuration. It is also great for optimizing client side performance and thereby improving the scalability of the project.
 
-## Technology Choices
+Django is out server site framework of choice for several reasons, the most important ones being:
 
-The client-side framework chosen is React TypeScript Next.js, which is a highly popular framework for building single-page applications. It provides efficient rendering of components and seamless client-side routing. The server-side framework chosen is Django, which is a high-level Python web framework that provides a fast development process and a robust application structure. The Django authentication system will be used for user authentication and authorization.
+- Robust backend structure that allows us to use a SQL database.
+- High security with the Django REST framework authentication system.
 
-## Deployment
+## Deployment:
 
-The web application will be deployed to a cloud platform such as Heroku or AWS. Continuous integration and deployment (CI/CD) will be implemented using tools such as GitHub Actions or Jenkins.
-
-## Scope
-
-The scope of the project includes developing a web application with a user-friendly interface that utilizes the OpenAI API to provide a chatbot assistant and OCR capability. The application will also integrate with Django authentication system for user authentication and authorization. The deployment of the application will be done on a cloud platform with CI/CD implementation.
-
-## Complexity
-
-The chosen frameworks, React TypeScript Next.js and Django, have varying levels of complexity. However, with the right amount of research and experience, they can be implemented with relative ease. The integration of the OpenAI API and OCR capability may add some complexity to the project.
+The web application will be deployed to a cloud platform such as Heroku. Continuous integration and deployment (CI/CD) will be implemented using gitlab version handling and Heroku built in support.
