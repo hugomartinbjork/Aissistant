@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import logo from "../assets/loggo2.png";
 
 interface NavbarProps {
   title: string;
@@ -8,9 +10,15 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => (
   <nav>
     <div className="container">
       <div className="logo">
-        {/* <img src={require("../assets/weknowit.png")} alt="weknowit-logo" /> */}
         <Link href="/" className="navlink">
-          {title}
+          <Image
+            src={logo}
+            alt="logo"
+            width={40}
+            height={40}
+            style={{ paddingTop: "25%" }}
+          />
+          {/* {title} */}
         </Link>
       </div>
       <div className="logo">
