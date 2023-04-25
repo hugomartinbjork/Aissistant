@@ -14,8 +14,8 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => (
           <Image
             src={logo}
             alt="logo"
-            width={40}
-            height={40}
+            width={50}
+            height={35}
             style={{ paddingTop: "25%" }}
           />
           {/* {title} */}

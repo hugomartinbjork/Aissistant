@@ -16,7 +16,7 @@ export const LoginForm = (props: Props) => {
           padding: "10px",
         }}
       >
-        <StandardInput placeholderText="Username" type="text" />
+        <StandardInput placeholderText="Email" type="text" />
         <StandardInput placeholderText="Password" type="password" />
         <div
           style={{

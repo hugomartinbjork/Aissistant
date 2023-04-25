@@ -27,9 +27,9 @@ body {
   font-weight: 600;
 }
 .navlink:hover {
-  background-color: #6687a42e;
+  /* background-color: #6687a42e; */
   border-radius: 5px;
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 nav {
   background-color: rgb(0, 0, 0, 0.05);
