@@ -44,7 +44,7 @@ export default function Signup() {
               style={{ color: "aqua", cursor: "pointer" }}
               onClick={handleOpen}
             >
-              terms of conditions
+              terms and conditions
             </a>
             .
           </p>
