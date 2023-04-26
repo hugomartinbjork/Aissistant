@@ -4,6 +4,8 @@ import Image from "next/image";
 import styles from "./styles.module.css";
 import openai from "../../assets/openai-logo-white.png";
 import google from "../../assets/Google-Drive-White.webp";
+import { useContext } from "react";
+import AuthContext from "@/context/AuthContext";
 
 export default function About() {
   return (

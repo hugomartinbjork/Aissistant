@@ -2,4 +2,5 @@ venv/
 server/db.sqlite3
 server/server/__pycache__/
 server/aisistant/__pycache__/
+server/aisistant/migrations/__pycache__/
 
