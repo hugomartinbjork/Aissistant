@@ -37,6 +37,7 @@ nav {
   height: 70px;
   display: flex;
   align-items: center;
+  position: fixed;
 }
 
 .container {
