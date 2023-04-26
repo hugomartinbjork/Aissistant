@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("aisistant/", include("aisistant.urls")),
+    path(r'api/auth/', include('knox.urls'))
 ]
