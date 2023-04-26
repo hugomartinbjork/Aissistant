@@ -23,7 +23,7 @@ export default function Home() {
     position: "absolute" as const,
     top: "50%",
     left: "50%",
-    fontSize: "50px",
+    fontSize: "60px",
     transform: "translate(-50%, -50%)",
     opacity: 0,
     transition: "opacity 1s ease-in-out",
