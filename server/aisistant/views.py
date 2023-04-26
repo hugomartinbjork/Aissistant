@@ -6,8 +6,11 @@ from .models import User
 from .serializers import UserSerializer
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import status
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 # Create your views here.
+
 
 @api_view(["GET"])
 def getRoutes(request):
@@ -15,13 +18,25 @@ def getRoutes(request):
         '/aisistant/token',
         '/aisistant/token/refresh'
     ]
-    return Response(routes, safe=False)
+    return Response(routes)
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        return token
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 
 class Users(APIView):
     def get(self, request):
-        try: 
+        try:
             users = User.objects.all()
-        except: 
+        except:
             return Response("Error")
         serialized = UserSerializer(users, many=True)
         return Response(serialized.data)
@@ -36,11 +51,12 @@ class Users(APIView):
         )
         User.save(new)
         return Response("You added a user")
-    
+
 
 class Login(APIView):
     '''Login a user using credentials username and password and returns
     the user along with bearer auth token'''
+
     def post(self, request):
         '''Login a user using credentials username and password. 
         returns User along with auth token'''
