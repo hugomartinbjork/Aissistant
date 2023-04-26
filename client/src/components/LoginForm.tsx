@@ -1,6 +1,7 @@
 import React from "react";
 import { StandardInput } from "./StandardInput";
 import { StandardButton } from "./StandardButton";
+import Link from "next/link";
 
 interface Props {
   onSubmit?: any;
@@ -26,7 +27,9 @@ export const LoginForm = (props: Props) => {
           }}
         >
           <StandardButton text="Login" margin="10px" />
-          <StandardButton text="Signup" margin="10px" />
+          <Link href="/signup">
+            <StandardButton text="Signup" margin="10px" />
+          </Link>
         </div>
       </form>
     </>

@@ -27,6 +27,7 @@ export const StandardButton = (props: Props) => {
       onMouseOut={(e) => {
         (e.target as HTMLElement).style.transform = "scale(1)";
       }}
+      onClick={props.onClick}
     >
       {props.text}
     </button>
