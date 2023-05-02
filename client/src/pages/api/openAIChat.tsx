@@ -6,7 +6,7 @@ const MAX_TOKENS = 3000
 const config = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 })
-
+// Fixa limit per användare
 const openai = new OpenAIApi(config)
 const model: CreateCompletionRequest['model'] = 'text-davinci-003'
 
@@ -14,7 +14,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { prompt } = req.query
+  const { prompt } = req.body
+  //console.log(prompt, 'prompt ', req.body)
   const completion = await openai
     .createCompletion({
       model,
@@ -37,5 +38,5 @@ export default async function handler(
       `MAX_TOKENS limit exceeded. Used ${completion.data.usage.total_tokens} tokens, limit is ${MAX_TOKENS}`
     )
   }
-  res.json({ completion })
+  res.json({ prompt: completion.data.choices[0].text })
 }

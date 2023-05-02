@@ -1,9 +1,9 @@
-import Link from "next/link";
-import Image from "next/image";
-import logo from "../assets/loggo2.png";
+import Link from 'next/link'
+import Image from 'next/image'
+import logo from '../assets/loggo2.png'
 
 interface NavbarProps {
-  title: string;
+  title: string
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title }) => (
@@ -16,7 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => (
             alt="logo"
             width={50}
             height={35}
-            style={{ paddingTop: "25%" }}
+            style={{ paddingTop: '25%' }}
           />
           {/* {title} */}
         </Link>
@@ -34,6 +34,6 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => (
       </div>
     </div>
   </nav>
-);
+)
 
-export default Navbar;
+export default Navbar
