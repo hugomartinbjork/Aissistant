@@ -1,11 +1,14 @@
 import Navbar from "@/components/Nav";
+import AuthContext, { getAuth } from "@/context/AuthContext";
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Home() {
   const [currentTextIndex, setCurrentTextIndex] = useState<number>(0);
   const textElements: string[] = ["Productivity", "Elegance", "Greatness"];
+  const auth = useAuth();
 
   const showNextText = () => {
     setCurrentTextIndex((currentTextIndex + 1) % textElements.length);
