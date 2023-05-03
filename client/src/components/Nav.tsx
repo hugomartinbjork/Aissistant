@@ -3,6 +3,7 @@ import Image from "next/image";
 import logo from "../assets/loggo2.png";
 import { useEffect, useState } from "react";
 import { getAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 interface NavbarProps {
   title: string;
@@ -10,13 +11,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title }) => {
-  const [thisAuth, setThisAuth] = useState<string>("");
-  useEffect(() => {
-    const auth = getAuth();
-    if (auth && auth.length > 0) {
-      setThisAuth(auth);
-    }
-  }, []);
+  const auth = useAuth();
   return (
     <nav>
       <div className="container">
@@ -32,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
             {/* {title} */}
           </Link>
         </div>
-        {thisAuth ? (
+        {auth ? (
           <div className="logo">
             <Link href="/home" className="navlink">
               Home
