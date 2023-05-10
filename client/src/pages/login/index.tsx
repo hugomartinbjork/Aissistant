@@ -12,7 +12,7 @@ export default function Login() {
     <>
       <Navbar title="DefaultIcon" />
       <div className={styles.outer}>
-        <h1 style={{ fontSize: "40px", marginTop: "50px" }}>Welcome</h1>;
+        <h1 style={{ fontSize: "40px", marginTop: "50px" }}>Welcome</h1>
         <LoginForm onSubmit={loginUser} />
       </div>
     </>
