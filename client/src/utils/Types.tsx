@@ -3,3 +3,9 @@ export interface User {
   email: string;
   token: string;
 }
+
+export interface Task {
+  title: string;
+  importance: number;
+  comment?: string;
+}

@@ -48,6 +48,7 @@ export const AuthProvider = ({ children }: any) => {
       router.push("/");
     } catch (err) {
       console.log(err);
+      alert("Could not find user");
     }
   };
 
