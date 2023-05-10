@@ -4,14 +4,14 @@ import logo from "../assets/loggo2.png";
 import { useEffect, useState } from "react";
 import { getAuth } from "@/context/AuthContext";
 import { useAuth } from "@/hooks/useAuth";
+import { logout } from "@/hooks/logout";
 
 interface NavbarProps {
   title: string;
-  auth?: string;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title }) => {
-  const auth = useAuth();
+  const { auth } = useAuth();
   return (
     <nav>
       <div className="container">
@@ -32,22 +32,22 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
             <Link href="/home" className="navlink">
               Home
             </Link>
+            <Link href="/" className="navlink">
+              Work
+            </Link>
             <Link href="/about" className="navlink">
               About
             </Link>
-            <Link href="/login" className="navlink">
+            <Link href="/" className="navlink" onClick={logout}>
               Logout
             </Link>
           </div>
         ) : (
           <div className="logo">
-            <Link href="/home" className="navlink">
-              Home
-            </Link>
             <Link href="/about" className="navlink">
               About
             </Link>
-            <Link href="/login" className="navlink">
+            <Link href="/login" className="navlink" passHref>
               Login
             </Link>
           </div>
