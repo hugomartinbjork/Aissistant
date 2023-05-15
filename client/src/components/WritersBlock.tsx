@@ -2,9 +2,12 @@ import { useState } from 'react'
 import { StandardButton } from './StandardButton'
 import { reWrite } from '@/utils/Functions'
 import PdfDownloader from '@/components/PdfDownloader'
+import Email from './Email'
+import { StandardInput } from './StandardInput'
 
 const WritersBlock = () => {
   const [text, setText] = useState<string>('')
+  const [subject, setSubject] = useState<string>('')
   const [selected, setSelected] = useState<string>('')
   const [writer, setWriter] = useState<boolean>(false)
 
@@ -36,6 +39,11 @@ const WritersBlock = () => {
     >
       <h3 style={{ textAlign: 'center' }}> The writing machine</h3>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <StandardInput
+          placeholderText="Title/Subject"
+          name="email"
+          onChange={(e: any) => setSubject(e.target.value)}
+        />
         <textarea
           style={{ width: '800px', height: '400px' }}
           placeholder="If you want to reformulate something, just select the text and hit
@@ -58,7 +66,8 @@ const WritersBlock = () => {
           {writer ? (
             <StandardButton text="Rewrite" onClick={handleRewrite} />
           ) : null}
-          <PdfDownloader text={text} title="mypdf" />
+          <PdfDownloader text={text} title={subject.split(' ').join('')} />
+          <Email subject={subject} body={text} />
         </div>
       </div>
     </div>

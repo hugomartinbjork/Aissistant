@@ -1,17 +1,17 @@
-import Link from "next/link";
-import Image from "next/image";
-import logo from "../assets/loggo2.png";
-import { useEffect, useState } from "react";
-import { getAuth } from "@/context/AuthContext";
-import { useAuth } from "@/hooks/useAuth";
-import { logout } from "@/hooks/logout";
+import Link from 'next/link'
+import Image from 'next/image'
+import logo from '../assets/loggo2.png'
+import { useEffect, useState } from 'react'
+import { getAuth } from '@/context/AuthContext'
+import { useAuth } from '@/hooks/useAuth'
+import { logout } from '@/hooks/logout'
 
 interface NavbarProps {
-  title: string;
+  title: string
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title }) => {
-  const { auth } = useAuth();
+  const { auth } = useAuth()
   return (
     <nav>
       <div className="container">
@@ -22,15 +22,15 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
               alt="logo"
               width={50}
               height={35}
-              style={{ paddingTop: "25%" }}
+              style={{ paddingTop: '25%' }}
             />
             {/* {title} */}
           </Link>
         </div>
         {auth ? (
           <div className="logo">
-            <Link href="/home" className="navlink">
-              Home
+            <Link href="/writer" className="navlink">
+              Workbench
             </Link>
             <Link href="/" className="navlink">
               Work
@@ -54,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
         )}
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

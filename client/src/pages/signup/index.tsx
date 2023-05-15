@@ -1,63 +1,71 @@
-import Navbar from "@/components/Nav";
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-import styles from "./styles.module.css";
-import { StandardInput } from "@/components/StandardInput";
-import { StandardButton } from "@/components/StandardButton";
-import { useState } from "react";
-import { TermsDialog } from "@/components/TermsDialog";
+import Navbar from '@/components/Nav'
+import Head from 'next/head'
+import Image from 'next/image'
+import Link from 'next/link'
+import styles from './styles.module.css'
+import { StandardInput } from '@/components/StandardInput'
+import { StandardButton } from '@/components/StandardButton'
+import { useState } from 'react'
+import { TermsDialog } from '@/components/TermsDialog'
+import { signUpUser } from '@/utils/Functions'
+import { useRouter } from 'next/router'
 
 export default function Signup() {
   // Dialog related consts
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false)
   const handleOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
   const handleClose = () => {
-    setOpen(false);
-  };
-  const [error, setError] = useState<string>("");
-
+    setOpen(false)
+  }
+  const [error, setError] = useState<string>('')
+  const router = useRouter()
   const handleSubmit = (e: any) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    const confirmPassword = e.target.confirmPassword.value;
-    const acceptTerms = e.target.acceptTerms.checked;
+    e.preventDefault()
+    const email = e.target.email.value
+    const password = e.target.password.value
+    const confirmPassword = e.target.confirmPassword.value
+    const acceptTerms = e.target.acceptTerms.checked
 
     if (password.length < 6) {
-      setError("Your password needs to be at least 6 characters");
-      return;
+      setError('Your password needs to be at least 6 characters')
+      return
     } else if (password !== confirmPassword) {
-      setError("Passwords does not match");
-      return;
+      setError('Passwords does not match')
+      return
     }
     if (!email || !password || !confirmPassword) {
-      setError("Please fill in all the fields");
-      return;
+      setError('Please fill in all the fields')
+      return
     } else if (!acceptTerms) {
-      setError("Please accept the terms and conditions to use the service");
-      return;
+      setError('Please accept the terms and conditions to use the service')
+      return
     }
-    setError("");
-  };
+    setError('')
+    try {
+      signUpUser({ email, password })
+      router.push('/login')
+    } catch (error) {
+      setError('something went wrong')
+    }
+  }
 
   return (
     <>
       <Navbar title="DefaultIcon" />
       <div className={styles.outer}>
-        <h1 style={{ fontSize: "40px", marginTop: "50px" }}>Signup</h1>;
+        <h1 style={{ fontSize: '40px', marginTop: '50px' }}>Signup</h1>;
         <form
           onSubmit={handleSubmit}
           style={{
-            borderRadius: "10px",
-            padding: "10px",
-            alignItems: "center",
-            alignContent: "center",
+            borderRadius: '10px',
+            padding: '10px',
+            alignItems: 'center',
+            alignContent: 'center',
           }}
         >
-          <h3 style={{ textAlign: "center" }}>
+          <h3 style={{ textAlign: 'center' }}>
             Enter your credentials to create an account
           </h3>
           <StandardInput
@@ -77,13 +85,13 @@ export default function Signup() {
           />
           <input
             type="checkbox"
-            style={{ marginRight: "10px", marginLeft: "30px" }}
+            style={{ marginRight: '10px', marginLeft: '30px' }}
             name="acceptTerms"
           />
           <span>
-            I agree to the{" "}
+            I agree to the{' '}
             <a
-              style={{ color: "aqua", cursor: "pointer" }}
+              style={{ color: 'aqua', cursor: 'pointer' }}
               onClick={handleOpen}
             >
               terms and conditions
@@ -91,7 +99,7 @@ export default function Signup() {
             .
           </span>
           <div className={styles.bottom}>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <StandardButton
               text="Create account"
               margin="10px"
@@ -102,5 +110,5 @@ export default function Signup() {
       </div>
       <TermsDialog open={open} handleClose={handleClose} />
     </>
-  );
+  )
 }

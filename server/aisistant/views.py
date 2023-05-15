@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login
 from rest_framework.exceptions import AuthenticationFailed
 from knox.models import AuthToken
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
@@ -57,8 +58,9 @@ class Users(APIView):
             data = request.data
         except:
             return Response("Error")
+        password = make_password(data['password'])
         tmp = User.objects.create(
-            username=data['email'], password=data['password'])
+            username=data['email'], password=password)
         new = UserExtended.objects.create(
             user=tmp,
         )
