@@ -8,3 +8,9 @@ export interface SignUpData {
   email: string
   password: string
 }
+
+export interface Task {
+  title: string;
+  importance: number;
+  comment?: string;
+}

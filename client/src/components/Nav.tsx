@@ -32,8 +32,8 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
             <Link href="/writer" className="navlink">
               Workbench
             </Link>
-            <Link href="/" className="navlink">
-              Work
+            <Link href="/board" className="navlink">
+              Board
             </Link>
             <Link href="/about" className="navlink">
               About
