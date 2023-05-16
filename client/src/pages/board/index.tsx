@@ -1,25 +1,37 @@
 import Navbar from "@/components/Nav";
 import styles from "./styles.module.css";
 import BoardStage from "@/components/BoardStage";
-import { Task } from "@/utils/Types";
+import { Task, Workspace } from "@/utils/Types";
 import { useEffect, useState } from "react";
+import { getWorkspacesByUser } from "@/utils/Functions";
+import { useAuth } from "@/hooks/useAuth";
+import ChooseWorkspace from "@/components/ChooseWorkspace";
 
-export default function Home() {
+export default function Board() {
   const [plannedTasks, setPlannedTasks] = useState<Task[]>([]);
   const [doingTasks, setDoingTasks] = useState<Task[]>([]);
   const [doneTasks, setDoneTasks] = useState<Task[]>([]);
 
-  useEffect(() => {
-    setPlannedTasks([
-      { title: "Jobba", importance: 3 },
-      { title: "Kröka", importance: 5, comment: "I särklass viktigast" },
-      { title: "Sova", importance: 1 },
-    ]);
-  }, []);
+  const [currentWorkspace, setCurrentWorkspace] = useState<Workspace>();
+  const [workspaces, setWorkspaces] = useState<Workspace[]>();
+
+  const { auth, user } = useAuth();
 
   const handleOnDrag = (e: React.DragEvent, taskTitle: string) => {
     e.dataTransfer.setData("task", taskTitle);
   };
+
+  const fetchWorkspaces = async () => {
+    const data = (await getWorkspacesByUser(parseInt(user))) as Workspace[];
+    setWorkspaces(data);
+    return data;
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchWorkspaces();
+    }
+  }, [user]);
 
   // Temporary logic for when the board is not customizable
   const getTasksByStage = (targetStage: string) => {
@@ -114,7 +126,25 @@ export default function Home() {
       <div className={styles.outer}>
         <h1 className={styles.mainHeading}>Workboard</h1>
         <div className={styles.stageContainer}>
-          <BoardStage
+          {!currentWorkspace && workspaces ? (
+            <ChooseWorkspace
+              onClick={setCurrentWorkspace}
+              workspaces={workspaces}
+            />
+          ) : (
+            currentWorkspace?.headings.map((heading) => (
+              <BoardStage
+                key={heading.order}
+                heading={heading.text}
+                tasks={plannedTasks}
+                setTasks={setPlannedTasks}
+                handleOnDrag={handleOnDrag}
+                handleOnDrop={(e: any) => handleOnDrop(e, heading.text)}
+              />
+            ))
+          )}
+
+          {/* <BoardStage
             heading="Planned"
             tasks={plannedTasks}
             setTasks={setPlannedTasks}
@@ -135,7 +165,7 @@ export default function Home() {
             handleOnDrop={(e: any) => handleOnDrop(e, "Done")}
             tasks={doneTasks}
             setTasks={setDoneTasks}
-          />
+          /> */}
         </div>
       </div>
     </>
