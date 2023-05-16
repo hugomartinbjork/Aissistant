@@ -3,7 +3,7 @@ import styles from "./styles.module.css";
 import BoardStage from "@/components/BoardStage";
 import { Task, Workspace } from "@/utils/Types";
 import { useEffect, useState } from "react";
-import { getWorkspacesByUser } from "@/utils/Functions";
+import { getTasksByWorkspace, getWorkspacesByUser } from "@/utils/Functions";
 import { useAuth } from "@/hooks/useAuth";
 import ChooseWorkspace from "@/components/ChooseWorkspace";
 
@@ -26,12 +26,30 @@ export default function Board() {
     setWorkspaces(data);
     return data;
   };
+  const fetchWorkspaceTasks = async () => {
+    try {
+      if (currentWorkspace) {
+        const data = (await getTasksByWorkspace(
+          currentWorkspace?.id
+        )) as Task[];
+        setPlannedTasks(data);
+        return data;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     if (user) {
       fetchWorkspaces();
     }
   }, [user]);
+  useEffect(() => {
+    if (currentWorkspace) {
+      fetchWorkspaceTasks();
+    }
+  }, [currentWorkspace]);
 
   // Temporary logic for when the board is not customizable
   const getTasksByStage = (targetStage: string) => {

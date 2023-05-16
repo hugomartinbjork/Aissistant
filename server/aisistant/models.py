@@ -21,5 +21,5 @@ class Task(models.Model):
     workspace = models.ForeignKey(WorkSpace, null=True, blank=True, on_delete=models.CASCADE)
     title = models.TextField(null=True)
     todo = models.TextField(null=True)
-    deadline = models.DateTimeField(null=True)
+    deadline = models.DateTimeField(null=True, blank=True)
     heading = models.ForeignKey(Heading, null=True, blank=True, on_delete=models.CASCADE)
