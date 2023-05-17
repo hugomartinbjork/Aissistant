@@ -11,6 +11,7 @@ export interface SignUpData {
 }
 
 export interface Task {
+  id: number;
   assigned: User;
   workspace: Workspace;
   title: string;

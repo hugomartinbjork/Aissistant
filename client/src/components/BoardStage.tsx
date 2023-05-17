@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import TaskCard from "./TaskCard";
-import { Task } from "@/utils/Types";
+import { Heading, Task } from "@/utils/Types";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { width } from "pdfkit/js/page";
 
 interface Props {
-  heading?: string;
+  heading: Heading;
   addButton?: boolean;
   onAddClick?: any;
   tasks?: Task[];
@@ -34,7 +34,7 @@ const BoardStage = (props: Props) => {
       onDragOver={handleDragOver}
       onDrop={props.handleOnDrop}
     >
-      <h2 style={{ borderBottom: "1px solid white" }}>{props.heading}</h2>
+      <h2 style={{ borderBottom: "1px solid white" }}>{props.heading.text}</h2>
       {props.addButton && (
         <AddBoxOutlinedIcon
           style={{

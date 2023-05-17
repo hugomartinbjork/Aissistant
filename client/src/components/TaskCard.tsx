@@ -26,7 +26,7 @@ const TaskCard = (props: Props) => {
         padding: "5px",
       }}
       draggable
-      onDragStart={(e) => props.handleOnDrag(e, props.task.title)}
+      onDragStart={(e) => props.handleOnDrag(e, props.task.id)}
     >
       <p style={{ margin: "2px" }}>Task: {props.task.title}</p>
       <p style={{ margin: "2px" }}>Todo: {props.task.todo}</p>

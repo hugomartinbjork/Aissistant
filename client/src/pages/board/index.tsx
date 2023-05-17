@@ -6,19 +6,21 @@ import { useEffect, useState } from "react";
 import { getTasksByWorkspace, getWorkspacesByUser } from "@/utils/Functions";
 import { useAuth } from "@/hooks/useAuth";
 import ChooseWorkspace from "@/components/ChooseWorkspace";
+import { log } from "console";
 
 export default function Board() {
   const [plannedTasks, setPlannedTasks] = useState<Task[]>([]);
   const [doingTasks, setDoingTasks] = useState<Task[]>([]);
   const [doneTasks, setDoneTasks] = useState<Task[]>([]);
+  const [defaultTasks, setDefaultTasks] = useState<Task[]>([]);
 
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace>();
   const [workspaces, setWorkspaces] = useState<Workspace[]>();
 
   const { auth, user } = useAuth();
 
-  const handleOnDrag = (e: React.DragEvent, taskTitle: string) => {
-    e.dataTransfer.setData("task", taskTitle);
+  const handleOnDrag = (e: React.DragEvent, taskId: number) => {
+    e.dataTransfer.setData("task", taskId.toString());
   };
 
   const fetchWorkspaces = async () => {
@@ -33,6 +35,7 @@ export default function Board() {
           currentWorkspace?.id
         )) as Task[];
         setPlannedTasks(data);
+        console.log(data);
         return data;
       }
     } catch (err) {
@@ -52,79 +55,101 @@ export default function Board() {
   }, [currentWorkspace]);
 
   // Temporary logic for when the board is not customizable
-  const getTasksByStage = (targetStage: string) => {
-    if (targetStage === "Planned") {
+  const getTasksByStage = (targetStage: number) => {
+    if (targetStage === 0) {
       return plannedTasks;
-    } else if (targetStage === "Doing") {
+    } else if (targetStage === 1) {
       return doingTasks;
-    } else if (targetStage === "Done") {
+    } else if (targetStage === 2) {
       return doneTasks;
     } else {
       return [];
     }
   };
 
+  const chooseBoardTasks = (stage: number) => {
+    switch (stage) {
+      case 0:
+        return plannedTasks;
+      case 1:
+        return doingTasks;
+      case 2:
+        return doneTasks;
+      default:
+        return defaultTasks;
+    }
+  };
+
+  const chooseBoardSetter = (stage: number) => {
+    switch (stage) {
+      case 0:
+        return setPlannedTasks;
+      case 1:
+        return setDoingTasks;
+      case 2:
+        return setDoneTasks;
+      default:
+        return setDefaultTasks;
+    }
+  };
+
   // This function is now hard coded for when there are only three boards with specific titles,
   // This will be made dynamic later
-  const handleOnDrop = (e: React.DragEvent, targetStage: string) => {
-    const cardTitle = e.dataTransfer.getData("task") as string;
+  const handleOnDrop = (e: React.DragEvent, targetStage: number) => {
+    const taskId = parseInt(e.dataTransfer.getData("task") as string);
 
     let updatedSourceTasks: Task[] = [];
     let setSourceTasks: React.Dispatch<React.SetStateAction<Task[]>> = () => {};
 
     const targetTasks = getTasksByStage(targetStage);
     const targetTask = [...plannedTasks, ...doingTasks, ...doneTasks].find(
-      (task) => task.title === cardTitle
+      (task) => task.id === taskId
     );
 
     if (targetTask) {
       switch (targetStage) {
-        case "Planned":
-          if (plannedTasks.find((task) => task.title === cardTitle)) {
+        case 0:
+          if (plannedTasks.find((task) => task.id === taskId)) {
             return;
           }
-          if (doingTasks.find((task) => task.title === cardTitle)) {
+          if (doingTasks.find((task) => task.id === taskId)) {
             updatedSourceTasks = doingTasks.filter(
-              (task) => task.title !== cardTitle
+              (task) => task.id !== taskId
             );
             setSourceTasks = setDoingTasks;
-          } else if (doneTasks.find((task) => task.title === cardTitle)) {
-            updatedSourceTasks = doneTasks.filter(
-              (task) => task.title !== cardTitle
-            );
+          } else if (doneTasks.find((task) => task.id === taskId)) {
+            updatedSourceTasks = doneTasks.filter((task) => task.id !== taskId);
             setSourceTasks = setDoneTasks;
           }
           setPlannedTasks([...targetTasks, targetTask]);
           break;
-        case "Doing":
-          if (doingTasks.find((task) => task.title === cardTitle)) {
+        case 1:
+          if (doingTasks.find((task) => task.id === taskId)) {
             return;
           }
-          if (plannedTasks.find((task) => task.title === cardTitle)) {
+          if (plannedTasks.find((task) => task.id === taskId)) {
             updatedSourceTasks = plannedTasks.filter(
-              (task) => task.title !== cardTitle
+              (task) => task.id !== taskId
             );
             setSourceTasks = setPlannedTasks;
-          } else if (doneTasks.find((task) => task.title === cardTitle)) {
-            updatedSourceTasks = doneTasks.filter(
-              (task) => task.title !== cardTitle
-            );
+          } else if (doneTasks.find((task) => task.id === taskId)) {
+            updatedSourceTasks = doneTasks.filter((task) => task.id !== taskId);
             setSourceTasks = setDoneTasks;
           }
           setDoingTasks([...targetTasks, targetTask]);
           break;
-        case "Done":
-          if (doneTasks.find((task) => task.title === cardTitle)) {
+        case 2:
+          if (doneTasks.find((task) => task.id === taskId)) {
             return;
           }
-          if (plannedTasks.find((task) => task.title === cardTitle)) {
+          if (plannedTasks.find((task) => task.id === taskId)) {
             updatedSourceTasks = plannedTasks.filter(
-              (task) => task.title !== cardTitle
+              (task) => task.id !== taskId
             );
             setSourceTasks = setPlannedTasks;
-          } else if (doingTasks.find((task) => task.title === cardTitle)) {
+          } else if (doingTasks.find((task) => task.id === taskId)) {
             updatedSourceTasks = doingTasks.filter(
-              (task) => task.title !== cardTitle
+              (task) => task.id !== taskId
             );
             setSourceTasks = setDoingTasks;
           }
@@ -153,37 +178,14 @@ export default function Board() {
             currentWorkspace?.headings.map((heading) => (
               <BoardStage
                 key={heading.order}
-                heading={heading.text}
-                tasks={plannedTasks}
-                setTasks={setPlannedTasks}
+                heading={heading}
+                tasks={chooseBoardTasks(heading.order)}
+                setTasks={() => chooseBoardSetter(heading.order)}
                 handleOnDrag={handleOnDrag}
-                handleOnDrop={(e: any) => handleOnDrop(e, heading.text)}
+                handleOnDrop={(e: any) => handleOnDrop(e, heading.order)}
               />
             ))
           )}
-
-          {/* <BoardStage
-            heading="Planned"
-            tasks={plannedTasks}
-            setTasks={setPlannedTasks}
-            handleOnDrag={handleOnDrag}
-            handleOnDrop={(e: any) => handleOnDrop(e, "Planned")}
-            addButton={true}
-          />
-          <BoardStage
-            heading="Doing"
-            handleOnDrag={handleOnDrag}
-            handleOnDrop={(e: any) => handleOnDrop(e, "Doing")}
-            tasks={doingTasks}
-            setTasks={setDoingTasks}
-          />
-          <BoardStage
-            heading="Done"
-            handleOnDrag={handleOnDrag}
-            handleOnDrop={(e: any) => handleOnDrop(e, "Done")}
-            tasks={doneTasks}
-            setTasks={setDoneTasks}
-          /> */}
         </div>
       </div>
     </>
