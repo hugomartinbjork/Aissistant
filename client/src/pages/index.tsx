@@ -4,6 +4,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { getWorkspacesByUser } from "@/utils/Functions";
 
 export default function Home() {
   const [currentTextIndex, setCurrentTextIndex] = useState<number>(0);
