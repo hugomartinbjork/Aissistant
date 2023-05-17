@@ -20,6 +20,13 @@ export interface Task {
   heading: Heading;
 }
 
+export interface PostTask {
+  ws_id: number;
+  title: string;
+  todo: string;
+  deadline?: Date;
+}
+
 export interface Workspace {
   id: number;
   name: string;

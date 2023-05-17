@@ -35,7 +35,6 @@ export default function Board() {
           currentWorkspace?.id
         )) as Task[];
         setPlannedTasks(data);
-        console.log(data);
         return data;
       }
     } catch (err) {
@@ -181,6 +180,7 @@ export default function Board() {
                 heading={heading}
                 tasks={chooseBoardTasks(heading.order)}
                 setTasks={() => chooseBoardSetter(heading.order)}
+                addButton={heading.order === 0 ? true : false}
                 handleOnDrag={handleOnDrag}
                 handleOnDrop={(e: any) => handleOnDrop(e, heading.order)}
               />

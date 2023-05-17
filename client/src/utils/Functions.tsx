@@ -1,4 +1,4 @@
-import { SignUpData, Workspace, WorkspacePost } from "./Types";
+import { PostTask, SignUpData, Workspace, WorkspacePost } from "./Types";
 
 const HOST = "http://127.0.0.1:8000/aisistant/";
 
@@ -61,6 +61,29 @@ export const getTasksByWorkspace = async (ws_id: number) => {
     const resp = await fetch(HOST + "tasks/" + ws_id);
     const data = await resp.json();
     return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const createTask = async ({
+  ws_id,
+  title,
+  todo,
+  deadline,
+}: PostTask) => {
+  try {
+    const resp = await fetch(HOST + "tasks/" + ws_id, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        todo: todo,
+        deadline: deadline,
+      }),
+    });
   } catch (err) {
     console.log(err);
   }
