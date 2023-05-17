@@ -8,8 +8,8 @@ interface Props {
   heading: Heading;
   addButton?: boolean;
   onAddClick?: any;
-  tasks?: Task[];
-  setTasks?: React.Dispatch<React.SetStateAction<Task[]>>;
+  tasks?: Task[][];
+  setTasks?: React.Dispatch<React.SetStateAction<Task[][]>>;
   handleOnDrag?: any;
   handleOnDrop?: any;
 }
@@ -18,7 +18,7 @@ const BoardStage = (props: Props) => {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
-
+  // const stageTasks:Task[] = props.tasks?[props.heading.order]
   return (
     <div
       style={{
@@ -36,18 +36,21 @@ const BoardStage = (props: Props) => {
     >
       <h2 style={{ borderBottom: "1px solid white" }}>{props.heading.text}</h2>
       {props.addButton && (
-        <AddBoxOutlinedIcon
-          style={{
-            position: "absolute",
-            top: "5",
-            right: "5",
-            width: "40px",
-            height: "40px",
-          }}
-        />
+        <div onClick={() => props.onAddClick(true)}>
+          <AddBoxOutlinedIcon
+            style={{
+              position: "absolute",
+              top: "5",
+              right: "5",
+              width: "40px",
+              height: "40px",
+              cursor: "pointer",
+            }}
+          />
+        </div>
       )}
       {props.tasks && props.tasks.length > 0
-        ? props.tasks.map((task) => {
+        ? props.tasks[props.heading.order].map((task) => {
             return (
               <TaskCard
                 task={task}

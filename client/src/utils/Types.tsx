@@ -11,13 +11,22 @@ export interface SignUpData {
 }
 
 export interface Task {
-  id: number;
+  task_id: number;
   assigned: User;
   workspace: Workspace;
   title: string;
   todo: string;
   deadline?: Date;
   heading: Heading;
+}
+
+export interface UpdateTask {
+  task_id: number;
+  assigned?: number;
+  title?: string;
+  todo?: string;
+  deadline?: Date;
+  order?: number;
 }
 
 export interface PostTask {

@@ -15,16 +15,20 @@ from django.core.management.base import BaseCommand
 @api_view(["GET", "PUT", "DELETE"])
 def task_detail(request, task_id):
     try:
-        task = Task.objects.get(id=task_id)
+        task = Task.objects.get(task_id=task_id)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "GET":
-        serializer = TaskSerializer(task, many=True)
+        serializer = TaskSerializer(task, many=False)
         return Response(serializer.data)
 
     elif request.method == "PUT":
         data = request.data
+        new_heading = Heading.objects.get(
+            workspace=task.workspace, order=data.get("order")
+        )
+        task.heading = new_heading
         serializer = TaskSerializer(instance=task, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
