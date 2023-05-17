@@ -12,13 +12,23 @@ import {
 } from "@mui/material";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import { StandardButton } from "./StandardButton";
+import { StandardInput } from "./StandardInput";
+import { createTask } from "@/utils/Functions";
+import { PostTask } from "@/utils/Types";
 
 interface Props {
   open: boolean;
   handleClose: any;
+  handleSubmit: any;
 }
 
 export const CreateTaskDialog = (props: Props) => {
+  const uploadTask = (e: any) => {
+    e.preventDefault();
+    const title = e.target.title.value;
+    const todo = e.target.todo.value;
+    props.handleSubmit(title, todo);
+  };
   return (
     <Dialog
       open={props.open}
@@ -64,10 +74,32 @@ export const CreateTaskDialog = (props: Props) => {
           alignItems: "center",
         }}
       >
-        <form id="taskform"></form>
+        <form id="taskform" onSubmit={uploadTask}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <StandardInput
+              placeholderText="What is the task name?"
+              label="Title"
+              name="title"
+              type="text"
+            />
+            <StandardInput
+              placeholderText="What needs to be done?"
+              label="Todo"
+              name="todo"
+              type="text"
+            />
+          </div>
+        </form>
       </DialogContent>
       <DialogActions>
-        <StandardButton onClick={() => console.log("Dialog")} text="Click" />
+        <StandardButton form="taskform" text="Submit" />
       </DialogActions>
     </Dialog>
   );

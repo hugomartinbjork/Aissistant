@@ -1,9 +1,10 @@
 import Navbar from "@/components/Nav";
 import styles from "./styles.module.css";
 import BoardStage from "@/components/BoardStage";
-import { Task, UpdateTask, Workspace } from "@/utils/Types";
+import { PostTask, Task, UpdateTask, Workspace } from "@/utils/Types";
 import { useEffect, useState } from "react";
 import {
+  createTask,
   getTask,
   getTasksByWorkspace,
   getWorkspacesByUser,
@@ -44,6 +45,23 @@ export default function Board() {
     const data = (await getWorkspacesByUser(parseInt(user))) as Workspace[];
     setWorkspaces(data);
     return data;
+  };
+
+  const submitTask = async (title: string, todo: string, deadline?: Date) => {
+    if (currentWorkspace) {
+      const data: PostTask = {
+        ws_id: currentWorkspace?.id,
+        title: title,
+        todo: todo,
+        deadline,
+      };
+      await createTask(data);
+      setOpenDialog(false);
+      await fetchWorkspaceTasks();
+    } else {
+      setOpenDialog(false);
+      return;
+    }
   };
   const fetchWorkspaceTasks = async () => {
     try {
@@ -125,7 +143,11 @@ export default function Board() {
           )}
         </div>
       </div>
-      <CreateTaskDialog open={openDialog} handleClose={handleClose} />
+      <CreateTaskDialog
+        open={openDialog}
+        handleClose={handleClose}
+        handleSubmit={submitTask}
+      />
     </>
   );
 }
