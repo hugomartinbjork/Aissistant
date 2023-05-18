@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import WritersBlock from '@/components/WritersBlock'
+import withAuth from '@/context/WithAuth'
 
 const index = () => {
   return (
@@ -16,4 +17,4 @@ const index = () => {
   )
 }
 
-export default index
+export default withAuth(index)

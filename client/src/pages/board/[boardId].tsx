@@ -1,7 +1,7 @@
 import styles from './styles.module.css'
 import BoardStage from '@/components/BoardStage'
 import { PostTask, Task, UpdateTask, Workspace } from '@/utils/Types'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import {
   createTask,
   getTask,
@@ -12,8 +12,10 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { CreateTaskDialog } from '@/components/CreateTaskDialog'
 import { useRouter } from 'next/router'
+import withAuth from '@/context/WithAuth'
+import AuthContext from '@/context/AuthContext'
 
-export default function Board() {
+export default withAuth(function Board() {
   const [tasks, setTasks] = useState<Task[][]>([])
   const {
     query: { boardId },
@@ -25,7 +27,7 @@ export default function Board() {
 
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace>()
 
-  const { auth, user } = useAuth()
+  const { auth, user } = useContext(AuthContext)
 
   const handleOnDrag = (e: React.DragEvent, taskId: number) => {
     e.dataTransfer.setData('task', taskId.toString())
@@ -139,4 +141,4 @@ export default function Board() {
       />
     </>
   )
-}
+})

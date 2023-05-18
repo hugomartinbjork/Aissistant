@@ -1,5 +1,4 @@
-import { User } from '@/utils/Types'
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState } from 'react'
 import { useRouter } from 'next/router'
 
 export const getAuth = () => {
@@ -21,7 +20,7 @@ export default AuthContext
 
 export const AuthProvider = ({ children }: any) => {
   const [auth, setAuth] = useState<string>(getAuth())
-  const [user, setUser] = useState<number>()
+  const [user, setUser] = useState<number>(parseInt(getAuthUser()))
   const router = useRouter()
 
   const loginUser = async (e: any) => {

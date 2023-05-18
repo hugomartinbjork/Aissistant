@@ -1,16 +1,17 @@
 import styles from './styles.module.css'
 import { Workspace } from '@/utils/Types'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { getWorkspacesByUser } from '@/utils/Functions'
 import { useAuth } from '@/hooks/useAuth'
 import ChooseWorkspace from '@/components/ChooseWorkspace'
 import { useRouter } from 'next/router'
+import withAuth from '@/context/WithAuth'
+import AuthContext from '@/context/AuthContext'
 
-export default function ChooseBoard() {
+export default withAuth(function ChooseBoard() {
   const router = useRouter()
   const [workspaces, setWorkspaces] = useState<Workspace[]>([])
-
-  const { auth, user } = useAuth()
+  const { auth, user } = useContext(AuthContext)
 
   const setCurrentWorkspace = (workspace: Workspace) => {
     router.push('board/' + workspace.id)
@@ -40,4 +41,4 @@ export default function ChooseBoard() {
       </div>
     </>
   )
-}
+})
