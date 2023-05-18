@@ -1,28 +1,28 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import logo from '../assets/loggo2.png'
-import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
-import { logout } from '@/hooks/logout'
-import { useRouter } from 'next/router'
+import Link from "next/link";
+import Image from "next/image";
+import logo from "../assets/loggo2.png";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { logout } from "@/hooks/logout";
+import { useRouter } from "next/router";
 
 interface NavbarProps {
-  title: string
+  title: string;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title }) => {
-  const { auth } = useAuth()
-  const [lastBoard, setLastBoard] = useState<string>('')
+  const { auth } = useAuth();
+  const [lastBoard, setLastBoard] = useState<string>("");
   // useeffect last board
   // router.push när du byter board
   //dynamic routes next.js
-  const { asPath } = useRouter()
-  console.log(asPath)
+  const { asPath } = useRouter(); // Test
+  console.log(asPath);
   useEffect(() => {
-    if (asPath.startsWith('/board/')) {
-      setLastBoard(asPath)
+    if (asPath.startsWith("/board/")) {
+      setLastBoard(asPath);
     }
-  }, [asPath])
+  }, [asPath]);
 
   return (
     <nav>
@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
               alt="logo"
               width={50}
               height={35}
-              style={{ paddingTop: '25%' }}
+              style={{ paddingTop: "25%" }}
             />
             {/* {title} */}
           </Link>
@@ -44,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
             <Link href="/writer" className="navlink">
               Workbench
             </Link>
-            <Link href={lastBoard ? lastBoard : '/board'} className="navlink">
+            <Link href={lastBoard ? lastBoard : "/board"} className="navlink">
               Board
             </Link>
             <Link href="/about" className="navlink">
@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
         )}
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
