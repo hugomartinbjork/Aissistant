@@ -1,7 +1,4 @@
 import Navbar from '@/components/Nav'
-import Head from 'next/head'
-import Image from 'next/image'
-import Link from 'next/link'
 import styles from './styles.module.css'
 import { StandardInput } from '@/components/StandardInput'
 import { StandardButton } from '@/components/StandardButton'
@@ -53,7 +50,6 @@ export default function Signup() {
 
   return (
     <>
-      <Navbar title="DefaultIcon" />
       <div className={styles.outer}>
         <h1 style={{ fontSize: '40px', marginTop: '50px' }}>Signup</h1>;
         <form

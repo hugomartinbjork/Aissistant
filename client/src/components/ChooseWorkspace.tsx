@@ -1,21 +1,20 @@
-import { Workspace } from "@/utils/Types";
-import React, { useState } from "react";
-import { StandardButton } from "./StandardButton";
-import ArrowDropDownCircleOutlinedIcon from "@mui/icons-material/ArrowDropDownCircleOutlined";
-import Select from "react-select";
+import { Workspace } from '@/utils/Types'
+import React, { useState } from 'react'
+import { StandardButton } from './StandardButton'
+import ArrowDropDownCircleOutlinedIcon from '@mui/icons-material/ArrowDropDownCircleOutlined'
 
 interface Props {
-  workspaces: Workspace[];
-  onClick?: any;
+  workspaces: Workspace[]
+  onClick?: any
 }
 
 const ChooseWorkspace = (props: Props) => {
-  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>();
+  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>()
 
   const handleWorkspaceChange = (workspace: any) => {
-    setSelectedWorkspace(workspace);
-    props.onClick(workspace);
-  };
+    setSelectedWorkspace(workspace)
+    props.onClick(workspace)
+  }
 
   return (
     <div>
@@ -27,15 +26,15 @@ const ChooseWorkspace = (props: Props) => {
           )
         }
         style={{
-          padding: "20px",
-          width: "16rem",
-          border: "1px solid white",
-          borderRadius: "4px",
-          color: "white",
-          backgroundColor: "black",
-          fontSize: "18px",
+          padding: '20px',
+          width: '16rem',
+          border: '1px solid white',
+          borderRadius: '4px',
+          color: 'white',
+          backgroundColor: 'black',
+          fontSize: '18px',
           fontFamily: "'Raleway', sans-serif",
-          textAlign: "center",
+          textAlign: 'center',
         }}
       >
         <option value="">Choose workspace</option>
@@ -46,7 +45,7 @@ const ChooseWorkspace = (props: Props) => {
         ))}
       </select>
     </div>
-  );
-};
+  )
+}
 
-export default ChooseWorkspace;
+export default ChooseWorkspace

@@ -1,153 +1,43 @@
-import Navbar from "@/components/Nav";
-import styles from "./styles.module.css";
-import BoardStage from "@/components/BoardStage";
-import { PostTask, Task, UpdateTask, Workspace } from "@/utils/Types";
-import { useEffect, useState } from "react";
-import {
-  createTask,
-  getTask,
-  getTasksByWorkspace,
-  getWorkspacesByUser,
-  updateTask,
-} from "@/utils/Functions";
-import { useAuth } from "@/hooks/useAuth";
-import ChooseWorkspace from "@/components/ChooseWorkspace";
-import { log } from "console";
-import { CreateTaskDialog } from "@/components/CreateTaskDialog";
+import styles from './styles.module.css'
+import { Workspace } from '@/utils/Types'
+import { useEffect, useState } from 'react'
+import { getWorkspacesByUser } from '@/utils/Functions'
+import { useAuth } from '@/hooks/useAuth'
+import ChooseWorkspace from '@/components/ChooseWorkspace'
+import { useRouter } from 'next/router'
 
-export default function Board() {
-  const [tasks, setTasks] = useState<Task[][]>([]);
+export default function ChooseBoard() {
+  const router = useRouter()
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([])
 
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const handleClose = () => {
-    setOpenDialog(false);
-  };
+  const { auth, user } = useAuth()
 
-  const [currentWorkspace, setCurrentWorkspace] = useState<Workspace>();
-  const [workspaces, setWorkspaces] = useState<Workspace[]>();
-
-  const { auth, user } = useAuth();
-
-  const handleOnDrag = (e: React.DragEvent, taskId: number) => {
-    e.dataTransfer.setData("task", taskId.toString());
-  };
-
-  const fetchTask = async (task_id: number) => {
-    const data = await getTask(task_id);
-    return data;
-  };
-  const changeTask = async (task_id: number, order: number) => {
-    const newData: UpdateTask = { task_id: task_id, order: order };
-    await updateTask(newData);
-  };
+  const setCurrentWorkspace = (workspace: Workspace) => {
+    router.push('board/' + workspace.id)
+  }
 
   const fetchWorkspaces = async () => {
-    const data = (await getWorkspacesByUser(parseInt(user))) as Workspace[];
-    setWorkspaces(data);
-    return data;
-  };
-
-  const submitTask = async (title: string, todo: string, deadline?: Date) => {
-    if (currentWorkspace) {
-      const data: PostTask = {
-        ws_id: currentWorkspace?.id,
-        title: title,
-        todo: todo,
-        deadline,
-      };
-      await createTask(data);
-      setOpenDialog(false);
-      await fetchWorkspaceTasks();
-    } else {
-      setOpenDialog(false);
-      return;
-    }
-  };
-  const fetchWorkspaceTasks = async () => {
-    try {
-      if (currentWorkspace) {
-        const data = (await getTasksByWorkspace(
-          currentWorkspace?.id
-        )) as Task[];
-        const taskMap: Task[][] = [];
-        const nrOfStages = currentWorkspace.headings.length;
-        for (let i = 0; i < nrOfStages; i++) {
-          taskMap[i] = [];
-        }
-        data.map((task) => {
-          if (!taskMap[task.heading.order]) {
-            taskMap[task.heading.order] = [];
-          }
-          taskMap[task.heading.order].push(task);
-        });
-        setTasks(taskMap);
-
-        // setPlannedTasks(data);
-        return data;
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+    const data = (await getWorkspacesByUser(parseInt(user))) as Workspace[]
+    setWorkspaces(data)
+    return data
+  }
   useEffect(() => {
     if (user) {
-      fetchWorkspaces();
+      fetchWorkspaces()
     }
-  }, [user]);
-  useEffect(() => {
-    if (currentWorkspace) {
-      fetchWorkspaceTasks();
-    }
-  }, [currentWorkspace]);
-
-  // Temporary logic for when the board is not customizable
-
-  // This function is now hard coded for when there are only three boards with specific titles,
-  // This will be made dynamic later
-  const handleOnDrop = async (e: React.DragEvent, targetStage: number) => {
-    const taskId = parseInt(e.dataTransfer.getData("task") as string);
-    const currentTask: Task = await fetchTask(taskId);
-
-    if (currentTask && currentWorkspace && tasks) {
-      await changeTask(currentTask.task_id, targetStage).then(() => {
-        fetchWorkspaceTasks();
-      });
-    }
-  };
+  }, [user])
 
   return (
     <>
-      <Navbar title="DefaultIcon" />
       <div className={styles.outer}>
         <h1 className={styles.mainHeading}>Workboard</h1>
         <div className={styles.stageContainer}>
-          {!currentWorkspace && workspaces ? (
-            <ChooseWorkspace
-              onClick={setCurrentWorkspace}
-              workspaces={workspaces}
-            />
-          ) : (
-            currentWorkspace?.headings.map((heading) => (
-              <BoardStage
-                key={heading.order}
-                heading={heading}
-                tasks={tasks}
-                setTasks={setTasks}
-                addButton={heading.order === 0 ? true : false}
-                onAddClick={heading.order === 0 ? setOpenDialog : null}
-                handleOnDrag={handleOnDrag}
-                handleOnDrop={(e: any) => handleOnDrop(e, heading.order)}
-              />
-            ))
-          )}
+          <ChooseWorkspace
+            onClick={setCurrentWorkspace}
+            workspaces={workspaces}
+          />
         </div>
       </div>
-      <CreateTaskDialog
-        open={openDialog}
-        handleClose={handleClose}
-        handleSubmit={submitTask}
-      />
     </>
-  );
+  )
 }

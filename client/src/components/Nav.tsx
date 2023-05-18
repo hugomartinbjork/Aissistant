@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { getAuth } from '@/context/AuthContext'
 import { useAuth } from '@/hooks/useAuth'
 import { logout } from '@/hooks/logout'
+import { useRouter } from 'next/router'
 
 interface NavbarProps {
   title: string
@@ -12,6 +13,18 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ title }) => {
   const { auth } = useAuth()
+  const [lastBoard, setLastBoard] = useState<string>('')
+  // useeffect last board
+  // router.push när du byter board
+  //dynamic routes next.js
+  const { asPath } = useRouter()
+  console.log(asPath)
+  useEffect(() => {
+    if (asPath.startsWith('/board/')) {
+      setLastBoard(asPath)
+    }
+  }, [asPath])
+
   return (
     <nav>
       <div className="container">
@@ -32,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
             <Link href="/writer" className="navlink">
               Workbench
             </Link>
-            <Link href="/board" className="navlink">
+            <Link href={lastBoard ? lastBoard : '/board'} className="navlink">
               Board
             </Link>
             <Link href="/about" className="navlink">

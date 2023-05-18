@@ -1,19 +1,14 @@
-import Navbar from "@/components/Nav";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "./styles.module.css";
-import openai from "../../assets/openai-logo-white.png";
-import google from "../../assets/Google-Drive-White.webp";
-import { useContext } from "react";
-import AuthContext from "@/context/AuthContext";
+import Image from 'next/image'
+import styles from './styles.module.css'
+import openai from '../../assets/openai-logo-white.png'
+import google from '../../assets/Google-Drive-White.webp'
 
 export default function About() {
   return (
     <>
-      <Navbar title="DefaultIcon" />
       <div className={styles.outer}>
         <h1
-          style={{ fontSize: "40px", marginTop: "50px", marginBottom: "60px" }}
+          style={{ fontSize: '40px', marginTop: '50px', marginBottom: '60px' }}
         >
           About AIssistant
         </h1>
@@ -30,7 +25,7 @@ export default function About() {
               />
             </div>
             <h1>OpenAI Integration</h1>
-            <p style={{ textAlign: "center" }}>
+            <p style={{ textAlign: 'center' }}>
               Our product utilizes the openAI API to integrate a state of the
               art - level language model for you to access directly. No more
               jumping between pages or copy pasting the snippets of code and
@@ -50,7 +45,7 @@ export default function About() {
             </div>
 
             <h1>Direct drive access</h1>
-            <p style={{ textAlign: "center" }}>
+            <p style={{ textAlign: 'center' }}>
               Through google API integration AIssistant provides easy access to
               your google drive. Use our platform to structure, develop and
               perfect your projects, and then simply write your work directly to
@@ -62,7 +57,7 @@ export default function About() {
         <div className={styles.inner}>
           <div className={styles.infocard}>
             <h1>The digital taskboard</h1>
-            <p style={{ textAlign: "center" }}>
+            <p style={{ textAlign: 'center' }}>
               To make full use of the platform, make sure you get to know all
               the clever tools and aspects of our kanban-inspired workbench.
               Structure, plan, and execute your tasks in an intuitive
@@ -79,5 +74,5 @@ export default function About() {
         </div>
       </div>
     </>
-  );
+  )
 }
