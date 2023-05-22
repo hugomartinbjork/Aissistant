@@ -9,20 +9,21 @@ import {
   getWorkspacesByUser,
   updateTask,
 } from '@/utils/Functions'
-import { useAuth } from '@/hooks/useAuth'
-import { CreateTaskDialog } from '@/components/CreateTaskDialog'
 import { useRouter } from 'next/router'
 import withAuth from '@/context/WithAuth'
 import AuthContext from '@/context/AuthContext'
+import Dropdown from '@/components/Dropdown'
 
 export default withAuth(function Board() {
   const [tasks, setTasks] = useState<Task[][]>([])
+  const [update, setUpdate] = useState<boolean>(false)
   const {
     query: { boardId },
   } = useRouter()
   const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const handleClose = () => {
-    setOpenDialog(false)
+
+  const handleChange = () => {
+    setOpenDialog(!openDialog)
   }
 
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace>()
@@ -98,7 +99,7 @@ export default withAuth(function Board() {
     if (currentWorkspace) {
       fetchWorkspaceTasks()
     }
-  }, [currentWorkspace])
+  }, [currentWorkspace, update])
 
   const handleOnDrop = async (e: React.DragEvent, targetStage: number) => {
     const taskId = parseInt(e.dataTransfer.getData('task') as string)
@@ -113,32 +114,38 @@ export default withAuth(function Board() {
 
   return (
     <>
-      <div className={styles.outer}>
-        <h1 className={styles.mainHeading}>Workboard</h1>
-        <div className={styles.stageContainer}>
-          {currentWorkspace ? (
-            currentWorkspace?.headings.map((heading) => (
-              <BoardStage
-                key={heading.order}
-                heading={heading}
-                tasks={tasks}
-                setTasks={setTasks}
-                addButton={heading.order === 0 ? true : false}
-                onAddClick={heading.order === 0 ? setOpenDialog : null}
-                handleOnDrag={handleOnDrag}
-                handleOnDrop={(e: any) => handleOnDrop(e, heading.order)}
-              />
-            ))
-          ) : (
-            <h1>Loading</h1>
-          )}
-        </div>
-      </div>
-      <CreateTaskDialog
-        open={openDialog}
-        handleClose={handleClose}
-        handleSubmit={submitTask}
-      />
+      {currentWorkspace ? (
+        <>
+          <Dropdown
+            open={openDialog}
+            ws_id={currentWorkspace.id}
+            handleClose={handleChange}
+            handleUpdate={setUpdate}
+            handleSubmit={submitTask}
+          />
+          <div className={styles.outer}>
+            <h1 className={styles.mainHeading}>Workboard</h1>
+            <div className={styles.stageContainer}>
+              {currentWorkspace.headings
+                .sort((a, b) => a.order - b.order)
+                .map((heading) => (
+                  <BoardStage
+                    key={heading.order}
+                    heading={heading}
+                    tasks={tasks}
+                    setTasks={setTasks}
+                    addButton={heading.order === 0 ? true : false}
+                    onAddClick={heading.order === 0 ? setOpenDialog : null}
+                    handleOnDrag={handleOnDrag}
+                    handleOnDrop={(e: any) => handleOnDrop(e, heading.order)}
+                  />
+                ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <h1>Loading</h1>
+      )}
     </>
   )
 })

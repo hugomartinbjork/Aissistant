@@ -4,32 +4,32 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  FormHelperText,
   IconButton,
-  TextField,
 } from '@mui/material'
 import CloseSharpIcon from '@mui/icons-material/CloseSharp'
 import { StandardButton } from './StandardButton'
 import { StandardInput } from './StandardInput'
-import { createTask } from '@/utils/Functions'
-import { PostTask } from '@/utils/Types'
+import { createStage } from '@/utils/Functions'
 
 interface Props {
   open: boolean
+  ws_id: number
+  handleUpdate: any
   handleClose: any
   handleSubmit: any
 }
 
-export const CreateTaskDialog = (props: Props) => {
-  const uploadTask = (e: any) => {
+export const CreateStage = (props: Props) => {
+  const uploadStage = (e: any) => {
     e.preventDefault()
-    const title = e.target.title.value
-    const todo = e.target.todo.value
-    props.handleSubmit(title, todo)
+    const text = e.target.heading.value
+    const order = e.target.order.value
+    const ws_id = props.ws_id
+    createStage({ ws_id, text, order })
+    props.handleClose()
+    props.handleUpdate()
   }
-  console.log('It should show', props.open)
   return (
     <Dialog
       open={props.open}
@@ -57,7 +57,7 @@ export const CreateTaskDialog = (props: Props) => {
           fontSize: '25px',
         }}
       >
-        Create a new task
+        Create a new heading
         <Box borderBottom={1} borderColor="grey.300" width="100%" />
         <IconButton
           aria-label="close"
@@ -75,7 +75,7 @@ export const CreateTaskDialog = (props: Props) => {
           alignItems: 'center',
         }}
       >
-        <form id="taskform" onSubmit={uploadTask}>
+        <form id="stageform" onSubmit={uploadStage}>
           <div
             style={{
               display: 'flex',
@@ -85,22 +85,22 @@ export const CreateTaskDialog = (props: Props) => {
             }}
           >
             <StandardInput
-              placeholderText="What is the task name?"
-              label="Title"
-              name="title"
+              placeholderText="What is the headings name?"
+              label="Heading"
+              name="heading"
               type="text"
             />
             <StandardInput
-              placeholderText="What needs to be done?"
-              label="Todo"
-              name="todo"
-              type="text"
+              placeholderText="What step should it be?"
+              label="Order"
+              name="order"
+              type="number"
             />
           </div>
         </form>
       </DialogContent>
       <DialogActions>
-        <StandardButton form="taskform" text="Submit" />
+        <StandardButton form="stageform" text="Submit" />
       </DialogActions>
     </Dialog>
   )

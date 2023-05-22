@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, ws_views, task_views
+from . import views, ws_views, task_views, stage_views
 
 urlpatterns = [
     # path("", views.default, name="default"),
@@ -16,4 +16,7 @@ urlpatterns = [
     path("tasks/<int:ws_id>", task_views.TaskView.as_view()),
     path("task/<int:task_id>", task_views.task_detail),
     path("tasks", task_views.get_all_tasks),
+    ## Headings
+
+    path("headings/<int:ws_id>", stage_views.HeadingView.as_view()),
 ]
