@@ -46,6 +46,7 @@ class WorkSpaceView(APIView):
         
 @api_view(['GET', 'PUT', 'DELETE'])
 def ws_detail(request, ws_id):
+    '''workspace/<int:ws_id>'''
     try:
         ws = WorkSpace.objects.get(id=ws_id)
     except:

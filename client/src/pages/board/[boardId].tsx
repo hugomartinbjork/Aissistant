@@ -6,26 +6,25 @@ import {
   createTask,
   getTask,
   getTasksByWorkspace,
-  getWorkspacesByUser,
   updateTask,
 } from '@/utils/Functions'
-import { useAuth } from '@/hooks/useAuth'
-import { CreateTaskDialog } from '@/components/CreateTaskDialog'
 import { useRouter } from 'next/router'
 import withAuth from '@/context/WithAuth'
 import AuthContext from '@/context/AuthContext'
+import Dropdown from '@/components/Dropdown'
+import { MyContext } from '@/context/DataProvider'
 
 export default withAuth(function Board() {
-  const [tasks, setTasks] = useState<Task[][]>([])
+  const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
+  const [loading, setLoading] = useState<boolean>(true)
   const {
     query: { boardId },
   } = useRouter()
   const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const handleClose = () => {
-    setOpenDialog(false)
-  }
 
-  const [currentWorkspace, setCurrentWorkspace] = useState<Workspace>()
+  const handleChange = () => {
+    setOpenDialog(!openDialog)
+  }
 
   const { auth, user } = useContext(AuthContext)
 
@@ -42,17 +41,10 @@ export default withAuth(function Board() {
     await updateTask(newData)
   }
 
-  const fetchWorkspaces = async (boardId: number) => {
-    const data = (await getWorkspacesByUser(parseInt(user))) as Workspace[]
-    const workspace = data.find((ws) => ws.id === boardId)
-    setCurrentWorkspace(workspace)
-    return data
-  }
-
   const submitTask = async (title: string, todo: string, deadline?: Date) => {
-    if (currentWorkspace) {
+    if (workspace) {
       const data: PostTask = {
-        ws_id: currentWorkspace?.id,
+        ws_id: workspace?.id,
         title: title,
         todo: todo,
         deadline,
@@ -66,45 +58,29 @@ export default withAuth(function Board() {
     }
   }
   const fetchWorkspaceTasks = async () => {
-    try {
-      if (currentWorkspace) {
-        const data = (await getTasksByWorkspace(currentWorkspace?.id)) as Task[]
-        const taskMap: Task[][] = []
-        const nrOfStages = currentWorkspace.headings.length
-        for (let i = 0; i < nrOfStages; i++) {
-          taskMap[i] = []
-        }
-        data.map((task) => {
-          if (!taskMap[task.heading.order]) {
-            taskMap[task.heading.order] = []
-          }
-          taskMap[task.heading.order].push(task)
-        })
-        setTasks(taskMap)
-        return data
-      }
-    } catch (err) {
-      console.log(err)
-    }
+    setTasks(workspace?.id as number)
   }
-
   useEffect(() => {
-    if (user && boardId) {
-      console.log({ boardId })
-      fetchWorkspaces(parseInt(boardId as string))
+    console.log('Are We even hereeee')
+    setLoading(true)
+    if (workspace) {
+      console.log('Are We even here')
+      setTasks(workspace.id)
+      console.log('Are We even after here')
     }
-  }, [user, boardId])
+    setLoading(false)
+  }, [workspace])
   useEffect(() => {
-    if (currentWorkspace) {
-      fetchWorkspaceTasks()
+    if (boardId) {
+      setWorkspace(parseInt(boardId as string))
     }
-  }, [currentWorkspace])
+  }, [boardId])
 
   const handleOnDrop = async (e: React.DragEvent, targetStage: number) => {
     const taskId = parseInt(e.dataTransfer.getData('task') as string)
     const currentTask: Task = await fetchTask(taskId)
 
-    if (currentTask && currentWorkspace && tasks) {
+    if (currentTask && workspace && tasks) {
       await changeTask(currentTask.task_id, targetStage).then(() => {
         fetchWorkspaceTasks()
       })
@@ -113,32 +89,35 @@ export default withAuth(function Board() {
 
   return (
     <>
-      <div className={styles.outer}>
-        <h1 className={styles.mainHeading}>Workboard</h1>
-        <div className={styles.stageContainer}>
-          {currentWorkspace ? (
-            currentWorkspace?.headings.map((heading) => (
-              <BoardStage
-                key={heading.order}
-                heading={heading}
-                tasks={tasks}
-                setTasks={setTasks}
-                addButton={heading.order === 0 ? true : false}
-                onAddClick={heading.order === 0 ? setOpenDialog : null}
-                handleOnDrag={handleOnDrag}
-                handleOnDrop={(e: any) => handleOnDrop(e, heading.order)}
-              />
-            ))
-          ) : (
-            <h1>Loading</h1>
-          )}
-        </div>
-      </div>
-      <CreateTaskDialog
-        open={openDialog}
-        handleClose={handleClose}
-        handleSubmit={submitTask}
-      />
+      {workspace ? (
+        <>
+          <Dropdown
+            open={openDialog}
+            ws_id={workspace.id}
+            handleClose={handleChange}
+            handleSubmit={submitTask}
+          />
+          <div className={styles.outer}>
+            <h1 className={styles.mainHeading}>Workboard</h1>
+            <div className={styles.stageContainer}>
+              {!loading &&
+                workspace.headings
+                  .sort((a, b) => a.order - b.order)
+                  .map((heading) => (
+                    <BoardStage
+                      key={heading.order}
+                      heading={heading}
+                      tasks={tasks}
+                      handleOnDrag={handleOnDrag}
+                      handleOnDrop={(e: any) => handleOnDrop(e, heading.order)}
+                    />
+                  ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <h1>Loading</h1>
+      )}
     </>
   )
 })
