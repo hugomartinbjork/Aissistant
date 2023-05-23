@@ -1,6 +1,12 @@
-// MyContext.js
-import React, { ReactNode, createContext, useState } from 'react'
+import React, {
+  ReactNode,
+  createContext,
+  useState,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 import { Task, Workspace } from '@/utils/Types'
+import { getTasksByWorkspace, getWorkspaceById } from '@/utils/Functions'
 
 interface MyProviderProps {
   children: ReactNode
@@ -8,9 +14,9 @@ interface MyProviderProps {
 
 interface ContextProps {
   tasks: Task[][]
-  setTasks: (tasks: Task[][]) => void
+  setTasks: (ws_id: number) => void
   workspace: Workspace | null
-  setWorkspace: (workspace: Workspace | null) => void
+  setWorkspace: (ws_id: number) => void
 }
 
 const MyContext = createContext<ContextProps>({
@@ -25,17 +31,35 @@ const DataProvider = ({ children }: MyProviderProps) => {
   const [workspace, setWorkspace] = useState<Workspace | null>(null)
 
   // Function to set tasks
-  const handleSetTasks = (newTasks: Task[][]) => {
-    setTasks(newTasks)
+  const handleSetTasks: ContextProps['setTasks'] = async (ws_id: number) => {
+    const data = await getTasksByWorkspace(ws_id)
+    const taskMap: Task[][] = []
+    if (workspace) {
+      const nrOfStages = workspace.headings.length
+      console.log('Nobma of stages: ', nrOfStages)
+      for (let i = 0; i < nrOfStages; i++) {
+        taskMap[i] = []
+      }
+      data.map((task: Task) => {
+        if (!taskMap[task.heading.order]) {
+          taskMap[task.heading.order] = []
+        }
+        taskMap[task.heading.order].push(task)
+      })
+      setTasks(taskMap)
+    }
   }
 
   // Function to set workspace
-  const handleSetWorkspace = (newWorkspace: Workspace | null) => {
-    setWorkspace(newWorkspace)
+  const handleSetWorkspace: ContextProps['setWorkspace'] = async (
+    ws_id: number
+  ) => {
+    const ws = await getWorkspaceById(ws_id)
+    setWorkspace(ws)
   }
 
   // Context value
-  const contextValue = {
+  const contextValue: ContextProps = {
     tasks,
     setTasks: handleSetTasks,
     workspace,

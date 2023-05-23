@@ -5,14 +5,13 @@ import { CreateStage } from './CreateStage'
 interface Props {
   open: boolean
   ws_id: number
-  handleUpdate: any
   handleClose: any
   handleSubmit: any
 }
 
 const Dropdown = (props: Props) => {
   const [selectedOption, setSelectedOption] = useState('')
-  const { open, ws_id, handleUpdate, handleClose, handleSubmit } = props
+  const { open, ws_id, handleClose, handleSubmit } = props
   const handleOptionChange = (e: any) => {
     console.log('poop: ', props)
     setSelectedOption(e.target.value)
@@ -57,7 +56,6 @@ const Dropdown = (props: Props) => {
         <CreateStage
           open={open}
           ws_id={ws_id}
-          handleUpdate={handleUpdate}
           handleClose={handleChange}
           handleSubmit={handleSubmit}
         />

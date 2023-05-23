@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   Box,
   Dialog,
@@ -11,24 +11,26 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp'
 import { StandardButton } from './StandardButton'
 import { StandardInput } from './StandardInput'
 import { createStage } from '@/utils/Functions'
+import { MyContext } from '@/context/DataProvider'
 
 interface Props {
   open: boolean
   ws_id: number
-  handleUpdate: any
   handleClose: any
   handleSubmit: any
 }
 
 export const CreateStage = (props: Props) => {
-  const uploadStage = (e: any) => {
+  const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
+  const uploadStage = async (e: any) => {
     e.preventDefault()
     const text = e.target.heading.value
     const order = e.target.order.value
     const ws_id = props.ws_id
-    createStage({ ws_id, text, order })
+    await createStage({ ws_id, text, order })
+    setWorkspace(ws_id)
+    console.log('------START------')
     props.handleClose()
-    props.handleUpdate()
   }
   return (
     <Dialog

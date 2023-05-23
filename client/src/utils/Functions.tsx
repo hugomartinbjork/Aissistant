@@ -38,6 +38,17 @@ export const signUpUser = async ({ email, password }: SignUpData) => {
   }
 }
 
+// <Workspace>
+
+export const getWorkspaceById = async (ws_id: any) => {
+  try {
+    const resp = await fetch(HOST + 'workspace/' + ws_id)
+    const data = await resp.json()
+    return data
+  } catch (err) {
+    console.log(err)
+  }
+}
 export const getWorkspacesByUser = async (user_id: number) => {
   try {
     const resp = await fetch(HOST + 'workspaces/' + user_id)
@@ -63,6 +74,8 @@ export const createWorkspace = async ({ user_id, name }: WorkspacePost) => {
     console.log(err)
   }
 }
+
+// <Workspace/>
 
 export const getTasksByWorkspace = async (ws_id: number) => {
   try {
@@ -151,4 +164,5 @@ export const createStage = async ({ ws_id, text, order }: PostHeading) => {
     console.log(err)
   }
 }
+
 // <HEADINGS/>
