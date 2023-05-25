@@ -16,14 +16,16 @@ const BoardStage = (props: Props) => {
   return (
     <div
       style={{
-        width: '360px',
+        width: '310px',
         height: '80vh',
         border: '2px solid white',
         borderRadius: '10px',
         display: 'flex',
+        margin: 5,
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
+        overflow: 'auto',
       }}
       onDragOver={handleDragOver}
       onDrop={props.handleOnDrop}

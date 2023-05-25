@@ -1,10 +1,10 @@
-import { Task } from "@/utils/Types";
-import React from "react";
-import { useDrag, DragSourceMonitor } from "react-dnd";
+import { Task } from '@/utils/Types'
+import React from 'react'
+import { useDrag, DragSourceMonitor } from 'react-dnd'
 
 interface Props {
-  task: Task;
-  handleOnDrag?: any;
+  task: Task
+  handleOnDrag?: any
 }
 
 const TaskCard = (props: Props) => {
@@ -17,21 +17,22 @@ const TaskCard = (props: Props) => {
   return (
     <div
       style={{
-        width: "80%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "left",
-        border: "1px solid white",
-        margin: "5px",
-        padding: "5px",
+        width: '80%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'left',
+        border: '1px solid white',
+        margin: '5px',
+        padding: '5px',
+        overflow: 'hidden',
       }}
       draggable
       onDragStart={(e) => props.handleOnDrag(e, props.task.task_id)}
     >
-      <p style={{ margin: "2px" }}>Task: {props.task.title}</p>
-      <p style={{ margin: "2px" }}>Todo: {props.task.todo}</p>
+      <p style={{ margin: '2px' }}>Task: {props.task.title}</p>
+      <p style={{ margin: '2px' }}>Todo: {props.task.todo}</p>
     </div>
-  );
-};
+  )
+}
 
-export default TaskCard;
+export default TaskCard

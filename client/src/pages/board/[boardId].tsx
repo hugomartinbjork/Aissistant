@@ -97,8 +97,8 @@ export default withAuth(function Board() {
             handleClose={handleChange}
             handleSubmit={submitTask}
           />
+          <h1 className={styles.mainHeading}>Workboard</h1>
           <div className={styles.outer}>
-            <h1 className={styles.mainHeading}>Workboard</h1>
             <div className={styles.stageContainer}>
               {!loading &&
                 workspace.headings
