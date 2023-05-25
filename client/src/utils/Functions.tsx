@@ -146,6 +146,15 @@ export const updateTask = async ({
     console.log(err)
   }
 }
+export const deleteTask = async (task_id: number) => {
+  try {
+    const resp = await fetch(HOST + 'task/' + task_id, {
+      method: 'DELETE',
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 // <HEADINGS>
 export const createStage = async ({ ws_id, text, order }: PostHeading) => {

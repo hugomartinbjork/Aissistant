@@ -16,7 +16,7 @@ const BoardStage = (props: Props) => {
   return (
     <div
       style={{
-        width: '310px',
+        width: '370px',
         height: '80vh',
         border: '2px solid white',
         borderRadius: '10px',

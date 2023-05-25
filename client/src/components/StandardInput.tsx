@@ -1,13 +1,14 @@
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler } from 'react'
 
 interface Props {
-  placeholderText: string;
-  onChange?: ChangeEventHandler;
-  maxLength?: number;
-  label?: string;
-  name?: string;
-  value?: string;
-  type?: string;
+  placeholderText: string
+  onChange?: ChangeEventHandler
+  maxLength?: number
+  label?: string
+  name?: string
+  value?: string
+  type?: string
+  minHeight?: string
 }
 
 /**
@@ -25,12 +26,13 @@ export const StandardInput = (props: Props) => {
         value={props.value}
         type={props.type}
         style={{
-          padding: "18px",
-          borderRadius: "10px",
-          minWidth: "20rem",
-          margin: "16px",
+          padding: '18px',
+          borderRadius: '10px',
+          minWidth: '20rem',
+          margin: '16px',
+          minHeight: props.minHeight || 0,
         }}
       />
     </div>
-  );
-};
+  )
+}

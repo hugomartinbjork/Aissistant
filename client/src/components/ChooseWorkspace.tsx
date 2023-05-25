@@ -1,7 +1,5 @@
 import { Workspace } from '@/utils/Types'
 import React, { useState } from 'react'
-import { StandardButton } from './StandardButton'
-import ArrowDropDownCircleOutlinedIcon from '@mui/icons-material/ArrowDropDownCircleOutlined'
 
 interface Props {
   workspaces: Workspace[]
@@ -17,7 +15,7 @@ const ChooseWorkspace = (props: Props) => {
   }
 
   return (
-    <div>
+    <div style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
       <select
         value={selectedWorkspace?.id}
         onChange={(e) =>

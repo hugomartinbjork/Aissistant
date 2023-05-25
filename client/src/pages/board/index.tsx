@@ -31,7 +31,9 @@ export default withAuth(function ChooseBoard() {
   return (
     <>
       <div className={styles.outer}>
-        <h1 className={styles.mainHeading}>Workboard</h1>
+        <div style={{ display: 'flex', flex: 2, justifyContent: 'center' }}>
+          <h1 className={styles.mainHeading}>Workboard</h1>
+        </div>
         <div className={styles.stageContainer}>
           <ChooseWorkspace
             onClick={setCurrentWorkspace}

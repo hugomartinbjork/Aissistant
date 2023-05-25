@@ -25,10 +25,11 @@ def task_detail(request, task_id):
 
     elif request.method == "PUT":
         data = request.data
-        new_heading = Heading.objects.get(
-            workspace=task.workspace, order=data.get("order")
-        )
-        task.heading = new_heading
+        if (data.get("order") is not None):
+            new_heading = Heading.objects.get(
+                workspace=task.workspace, order=data.get("order")
+                )
+            task.heading = new_heading
         serializer = TaskSerializer(instance=task, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()

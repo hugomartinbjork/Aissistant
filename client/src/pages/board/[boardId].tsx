@@ -61,12 +61,9 @@ export default withAuth(function Board() {
     setTasks(workspace?.id as number)
   }
   useEffect(() => {
-    console.log('Are We even hereeee')
     setLoading(true)
     if (workspace) {
-      console.log('Are We even here')
       setTasks(workspace.id)
-      console.log('Are We even after here')
     }
     setLoading(false)
   }, [workspace])
@@ -77,9 +74,10 @@ export default withAuth(function Board() {
   }, [boardId])
 
   const handleOnDrop = async (e: React.DragEvent, targetStage: number) => {
+    console.log('thisis target', targetStage)
     const taskId = parseInt(e.dataTransfer.getData('task') as string)
     const currentTask: Task = await fetchTask(taskId)
-
+    console.log('thisis two', currentTask, workspace, tasks)
     if (currentTask && workspace && tasks) {
       await changeTask(currentTask.task_id, targetStage).then(() => {
         fetchWorkspaceTasks()
@@ -97,7 +95,6 @@ export default withAuth(function Board() {
             handleClose={handleChange}
             handleSubmit={submitTask}
           />
-          <h1 className={styles.mainHeading}>Workboard</h1>
           <div className={styles.outer}>
             <div className={styles.stageContainer}>
               {!loading &&

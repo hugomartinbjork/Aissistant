@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { CreateTaskDialog } from './CreateTaskDialog'
 import { CreateStage } from './CreateStage'
+import { useRouter } from 'next/router'
 
 interface Props {
   open: boolean
@@ -12,14 +13,21 @@ interface Props {
 const Dropdown = (props: Props) => {
   const [selectedOption, setSelectedOption] = useState('')
   const { open, ws_id, handleClose, handleSubmit } = props
+  const router = useRouter()
   const handleOptionChange = (e: any) => {
-    console.log('poop: ', props)
     setSelectedOption(e.target.value)
     handleClose()
   }
   const handleChange = () => {
     handleClose()
     setSelectedOption('choice')
+  }
+  const handleChooseWorkspace = () => {
+    console.log(12435)
+    router.push('/board')
+  }
+  if (selectedOption === 'swithworkspace') {
+    handleChooseWorkspace()
   }
 
   return (
@@ -43,7 +51,7 @@ const Dropdown = (props: Props) => {
         <option value="choose">Select an option</option>
         <option value="createtask">Create a new task</option>
         <option value="createstage">Create a new heading</option>
-        <option value="modal3">Modal 3</option>
+        <option value="swithworkspace">Switch Workspace</option>
       </select>
       {selectedOption === 'createtask' && (
         <CreateTaskDialog
@@ -60,7 +68,6 @@ const Dropdown = (props: Props) => {
           handleSubmit={handleSubmit}
         />
       )}
-      {selectedOption === 'modal3' && <h1>Här ska modal 3 komma</h1>}
     </div>
   )
 }

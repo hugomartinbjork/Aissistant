@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   Dialog,
@@ -13,23 +13,26 @@ import {
 import CloseSharpIcon from '@mui/icons-material/CloseSharp'
 import { StandardButton } from './StandardButton'
 import { StandardInput } from './StandardInput'
-import { createTask } from '@/utils/Functions'
-import { PostTask } from '@/utils/Types'
 
 interface Props {
   open: boolean
   handleClose: any
   handleSubmit: any
+  input_title?: string
+  input_todo?: string
+  header?: string
 }
 
 export const CreateTaskDialog = (props: Props) => {
-  const uploadTask = (e: any) => {
+  const header = props.header || 'Create a new task'
+  const [titleValue, setTitleValue] = useState<string>(props.input_title || '')
+  const [todoValue, setTodoValue] = useState<string>(props.input_todo || '')
+
+  const uploadTask = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const title = e.target.title.value
-    const todo = e.target.todo.value
-    props.handleSubmit(title, todo)
+    props.handleSubmit(titleValue, todoValue)
   }
-  console.log('It should show', props.open)
+
   return (
     <Dialog
       open={props.open}
@@ -57,7 +60,7 @@ export const CreateTaskDialog = (props: Props) => {
           fontSize: '25px',
         }}
       >
-        Create a new task
+        {header}
         <Box borderBottom={1} borderColor="grey.300" width="100%" />
         <IconButton
           aria-label="close"
@@ -89,12 +92,20 @@ export const CreateTaskDialog = (props: Props) => {
               label="Title"
               name="title"
               type="text"
+              value={titleValue}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setTitleValue(e.target.value)
+              }
             />
             <StandardInput
               placeholderText="What needs to be done?"
               label="Todo"
               name="todo"
               type="text"
+              value={todoValue}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setTodoValue(e.target.value)
+              }
             />
           </div>
         </form>
