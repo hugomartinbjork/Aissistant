@@ -9,6 +9,7 @@ interface Props {
   value?: string
   type?: string
   minHeight?: string
+  margin?: string
 }
 
 /**
@@ -16,7 +17,7 @@ interface Props {
  */
 export const StandardInput = (props: Props) => {
   return (
-    <div>
+    <div style={{ margin: props.margin || 0 }}>
       {props.label && <p>{props.label}</p>}
       <input
         placeholder={props.placeholderText}

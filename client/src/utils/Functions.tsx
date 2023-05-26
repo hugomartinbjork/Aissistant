@@ -70,6 +70,8 @@ export const createWorkspace = async ({ user_id, name }: WorkspacePost) => {
         name,
       }),
     })
+    const data = await resp.json()
+    return data
   } catch (err) {
     console.log(err)
   }
@@ -115,6 +117,8 @@ export const createTask = async ({
         deadline: deadline,
       }),
     })
+    const data = await resp.json()
+    return data
   } catch (err) {
     console.log(err)
   }

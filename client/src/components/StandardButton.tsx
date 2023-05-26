@@ -8,6 +8,7 @@ interface Props {
   minWidth?: string
   padding?: string
   fontSize?: string
+  borderColor?: string
 }
 
 export const StandardButton = (props: Props) => {
@@ -15,7 +16,7 @@ export const StandardButton = (props: Props) => {
     <button
       style={{
         border: 'solid 1px',
-        borderColor: 'white',
+        borderColor: props.borderColor || 'white',
         fontSize: props.fontSize || '20px',
         fontFamily: 'Raleway, sans-serif',
         color: 'white',
