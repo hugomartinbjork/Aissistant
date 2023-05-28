@@ -10,6 +10,14 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = ("id",)
 
+class UserExtendedSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source="user.id")
+    name = serializers.CharField(source="user.username")
+
+    class Meta:
+        model = UserExtended
+        fields = ("id", "name")
+
 
 class HeadingsSerializer(ModelSerializer):
     class Meta:

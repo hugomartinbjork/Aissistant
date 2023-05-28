@@ -29,7 +29,6 @@ export const CreateStage = (props: Props) => {
     const ws_id = props.ws_id
     await createStage({ ws_id, text, order })
     setWorkspace(ws_id)
-    console.log('------START------')
     props.handleClose()
   }
   return (

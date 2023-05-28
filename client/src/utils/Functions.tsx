@@ -6,6 +6,8 @@ import {
   Workspace,
   WorkspacePost,
   PostHeading,
+  WorkspacePutL,
+  WorkspacePutA,
 } from './Types'
 
 const HOST = 'http://127.0.0.1:8000/aisistant/'
@@ -38,6 +40,16 @@ export const signUpUser = async ({ email, password }: SignUpData) => {
   }
 }
 
+export const getUsers = async () => {
+  try {
+    const resp = await fetch(HOST + 'users')
+    const data = await resp.json()
+    return data
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // <Workspace>
 
 export const getWorkspaceById = async (ws_id: any) => {
@@ -58,6 +70,15 @@ export const getWorkspacesByUser = async (user_id: number) => {
     console.log(err)
   }
 }
+export const getWorkspacesUsers = async (ws_id: number) => {
+  try {
+    const resp = await fetch(HOST + 'users/' + ws_id)
+    const data = await resp.json()
+    return data
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 export const createWorkspace = async ({ user_id, name }: WorkspacePost) => {
   try {
@@ -72,6 +93,56 @@ export const createWorkspace = async ({ user_id, name }: WorkspacePost) => {
     })
     const data = await resp.json()
     return data
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const deleteWorkspace = async (ws_id: number) => {
+  try {
+    const resp = await fetch(HOST + 'workspace/' + ws_id, {
+      method: 'DELETE',
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+// Update / Add user to workspace
+export const updateWorkspaceA = async ({
+  name,
+  ws_id,
+  user_id,
+}: WorkspacePutA) => {
+  try {
+    const resp = await fetch(HOST + 'workspace/' + ws_id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        ws_id: ws_id,
+        user_id,
+      }),
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// Update / Remove user from workspace
+export const updateWorkspaceL = async ({ name, user_id }: WorkspacePutL) => {
+  try {
+    const resp = await fetch(HOST + 'workspaces/' + user_id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        user_id,
+      }),
+    })
   } catch (err) {
     console.log(err)
   }
@@ -172,6 +243,16 @@ export const createStage = async ({ ws_id, text, order }: PostHeading) => {
         text,
         order,
       }),
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const deleteStage = async (ws_id: number, order: number) => {
+  try {
+    const resp = await fetch(HOST + 'heading/' + ws_id + '/' + order, {
+      method: 'DELETE',
     })
   } catch (err) {
     console.log(err)

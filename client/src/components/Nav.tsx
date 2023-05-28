@@ -17,8 +17,11 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
   // router.push när du byter board
   //dynamic routes next.js
   const { asPath } = useRouter() // Test
-  console.log(asPath)
+
   useEffect(() => {
+    if (asPath === '/board') {
+      setLastBoard('')
+    }
     if (asPath.startsWith('/board/')) {
       setLastBoard(asPath)
     }

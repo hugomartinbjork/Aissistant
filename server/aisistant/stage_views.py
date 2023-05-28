@@ -29,3 +29,32 @@ class HeadingView(APIView):
         if serializer.is_valid:
             return Response(serializer.data, status=200)
         return Response({"Serialization failed"}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+@api_view(["GET", "PUT", "DELETE"])
+def heading_detail(request, ws_id, order):
+    try:
+        heading = Heading.objects.get(workspace_id=ws_id, order=order)
+    except Heading.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        serializer = HeadingsSerializer(heading)
+        return Response(serializer.data)
+
+    elif request.method == "PUT":
+        data = request.data
+        serializer = HeadingsSerializer(instance=heading, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == "DELETE":
+        headings_to_update = Heading.objects.filter(workspace_id=ws_id, order__gt=order)
+        for heading in headings_to_update:
+            heading.order -= 1
+            heading.save()
+        heading.delete()
+        return Response("Successful deletion", status=status.HTTP_200_OK)

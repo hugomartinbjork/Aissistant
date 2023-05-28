@@ -2,14 +2,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .models import UserExtended, Task
-from .serializers import UserSerializer, TaskSerializer
+from .models import UserExtended, Task, WorkSpace
+from .serializers import UserExtendedSerializer, UserSerializer, TaskSerializer
 from django.contrib.auth import authenticate, login
 from rest_framework.exceptions import AuthenticationFailed
 from knox.models import AuthToken
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from django.core.management.base import BaseCommand
 
 # Create your views here.
 class Login(APIView):
@@ -44,7 +43,7 @@ class Users(APIView):
             users = UserExtended.objects.all()
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        serialized = UserSerializer(users, many=True)
+        serialized = UserExtendedSerializer(users, many=True)
         return Response(serialized.data)
 
     def post(self, request):
@@ -61,13 +60,12 @@ class Users(APIView):
         UserExtended.save(new)
         return Response("A new user has been added to the system", status=status.HTTP_200_OK)
 
-class Command(BaseCommand):
-    help = 'Reset daily count for all users'
-
-    def handle(self, *args, **options):
-
-        users = UserExtended.objects.all()
-
-        for user in users:
-            user.daily_count = 0
-            user.save()
+@api_view(["GET", "PUT", "DELETE"])
+def user_detail_by_ws(request, ws_id):
+    try:
+        ws = WorkSpace.objects.get(id=ws_id)
+    except UserExtended.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == "GET":
+        serializer = UserExtendedSerializer(ws.users.all(),many=True)
+        return Response(serializer.data)

@@ -31,6 +31,7 @@ export const CreateTaskDialog = (props: Props) => {
   const uploadTask = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     props.handleSubmit(titleValue, todoValue)
+    props.handleClose()
   }
 
   return (

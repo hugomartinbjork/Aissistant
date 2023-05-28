@@ -30,7 +30,6 @@ const DataProvider = ({ children }: MyProviderProps) => {
     const taskMap: Task[][] = []
     if (workspace) {
       const nrOfStages = workspace.headings.length
-      console.log('Nobma of stages: ', nrOfStages)
       for (let i = 0; i < nrOfStages; i++) {
         taskMap[i] = []
       }

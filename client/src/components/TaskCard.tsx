@@ -4,6 +4,7 @@ import { StandardButton } from './StandardButton'
 import { updateTask, deleteTask } from '@/utils/Functions'
 import { CreateTaskDialog } from './CreateTaskDialog'
 import { MyContext } from '@/context/DataProvider'
+import { ConfirmationDialog } from './ConfirmationDialog'
 
 interface Props {
   task: Task
@@ -13,6 +14,7 @@ interface Props {
 const TaskCard = (props: Props) => {
   const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
   const [open, setOpen] = useState<boolean>(false)
+  const [confirm, setConfirm] = useState<boolean>(false)
   const modifyTask = async (title?: string, todo?: string) => {
     const newData: UpdateTask = {
       task_id: props.task.task_id,
@@ -26,12 +28,22 @@ const TaskCard = (props: Props) => {
   const handleChange = () => {
     setOpen(!open)
   }
-  const handleDelete = async () => {
-    await deleteTask(props.task.task_id)
+  const handleConf = () => {
+    setConfirm(!confirm)
+  }
+  const handleDelete = async (id: number) => {
+    await deleteTask(id)
     setWorkspace(workspace?.id as number)
   }
   return (
     <>
+      {confirm ? (
+        <ConfirmationDialog
+          open={confirm}
+          handleClose={handleConf}
+          handleSubmit={() => handleDelete(props.task.task_id)}
+        />
+      ) : null}
       {open ? (
         <CreateTaskDialog
           open={open}
@@ -79,7 +91,7 @@ const TaskCard = (props: Props) => {
               fontSize="13px"
               text="Delete"
               margin="8px"
-              onClick={() => handleDelete()}
+              onClick={() => setConfirm(true)}
             />
           </div>
         </div>

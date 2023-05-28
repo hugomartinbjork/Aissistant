@@ -9,7 +9,6 @@ from rest_framework.exceptions import AuthenticationFailed
 from knox.models import AuthToken
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from django.core.management.base import BaseCommand
 
 
 @api_view(["GET", "PUT", "DELETE"])
@@ -58,9 +57,9 @@ class TaskView(APIView):
         new_task = Task(title=title, todo=todo, workspace=ws)
         if deadline is not None:
             new_task.deadline = deadline
-        headings = ws.headings.all()
-        if headings:
-            new_task.heading = headings[0]
+        heading = Heading.objects.filter(workspace_id=ws_id).order_by('order').first()
+        if heading:
+            new_task.heading = heading
         new_task.save()
         serializer = TaskSerializer(new_task)
         if serializer.is_valid:

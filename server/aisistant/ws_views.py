@@ -9,13 +9,12 @@ from rest_framework.exceptions import AuthenticationFailed
 from knox.models import AuthToken
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from django.core.management.base import BaseCommand
 
 # Create your views here.
 
 class WorkSpaceView(APIView):
     '''Group.'''
-
+    
     def get(self, request, user_id):
         '''Get.'''
         if request.method == 'GET':
@@ -43,6 +42,22 @@ class WorkSpaceView(APIView):
             if serializer.is_valid:
                 return Response(serializer.data, status=200)
             return Response({'Serialization failed'}, status=status.HTTP_400_BAD_REQUEST)
+    ## Leave WS
+    def put(self, request, user_id):
+        ws = WorkSpace.objects.get(users = user_id)
+        user= UserExtended.objects.get(user=user_id) 
+        data = request.data
+        if ws:
+            if user in ws.users.all():
+                ws.users.remove(user)
+                if ws.users.count() == 0:
+                    ws.delete()
+                    return Response('Workspace deleted', status=status.HTTP_200_OK)
+        serializer = WorkSpaceSerializer(instance=ws, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 @api_view(['GET', 'PUT', 'DELETE'])
 def ws_detail(request, ws_id):
@@ -55,13 +70,24 @@ def ws_detail(request, ws_id):
     if request.method == 'GET':
         serializer = WorkSpaceSerializer(ws, many= False)
         return Response(serializer.data)
-
+    # Change ws / add user to ws
     elif request.method == 'PUT':
-        name = request.data.get('name')
-        ws.name = name
-        ws.save()
-        serializer = WorkSpaceSerializer(ws, many= False)
-        return Response(serializer.data)
+        data = request.data
+        if data.get('user_id') is not None:
+            user_id = data.get('user_id')
+            try:
+                user = UserExtended.objects.get(user=user_id)
+            except UserExtended.DoesNotExist:
+                return Response("User not found", status=status.HTTP_404_NOT_FOUND)
+            if user not in ws.users.all():
+                ws.users.add(user)
+            serializer = WorkSpaceSerializer(instance=ws, data=data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Invalid request data", status=status.HTTP_400_BAD_REQUEST)
+
     elif request.method == 'DELETE':
         ws.delete()
         return Response('Sucessful deletion', status=200)
@@ -86,6 +112,7 @@ def ws_headings(request, ws_id):
         name = request.data.get('name')
         ws.name = name
         ws.save()
+        
         serializer = WorkSpaceSerializer(ws, many= False)
         return Response(serializer.data)
     elif request.method == 'DELETE':

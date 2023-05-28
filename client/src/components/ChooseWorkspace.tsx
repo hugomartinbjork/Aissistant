@@ -24,10 +24,10 @@ const ChooseWorkspace = (props: Props) => {
           )
         }
         style={{
-          padding: '20px',
-          width: '16rem',
+          padding: '30px',
+          width: '15rem',
           border: '1px solid white',
-          borderRadius: '4px',
+          borderRadius: '10px',
           color: 'white',
           backgroundColor: 'black',
           fontSize: '18px',

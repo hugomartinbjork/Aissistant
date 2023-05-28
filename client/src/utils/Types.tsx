@@ -4,6 +4,10 @@ export interface User {
   email: string
   token: string
 }
+export interface MiniUser {
+  id: number
+  name: string
+}
 
 export interface SignUpData {
   email: string
@@ -57,4 +61,13 @@ export interface Heading {
   order: number
   text: string
   workspace: Workspace
+}
+export interface WorkspacePutL {
+  name?: string
+  user_id: number
+}
+export interface WorkspacePutA {
+  name?: string
+  user_id?: number
+  ws_id: number
 }

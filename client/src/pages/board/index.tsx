@@ -96,6 +96,7 @@ export default withAuth(function ChooseBoard() {
               margin="35px"
               borderColor={open ? 'green' : 'white'}
               form="workform"
+              minWidth="15rem"
             />
           </form>
         </div>

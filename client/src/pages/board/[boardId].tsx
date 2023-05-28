@@ -74,10 +74,8 @@ export default withAuth(function Board() {
   }, [boardId])
 
   const handleOnDrop = async (e: React.DragEvent, targetStage: number) => {
-    console.log('thisis target', targetStage)
     const taskId = parseInt(e.dataTransfer.getData('task') as string)
     const currentTask: Task = await fetchTask(taskId)
-    console.log('thisis two', currentTask, workspace, tasks)
     if (currentTask && workspace && tasks) {
       await changeTask(currentTask.task_id, targetStage).then(() => {
         fetchWorkspaceTasks()
