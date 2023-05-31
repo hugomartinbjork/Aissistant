@@ -36,7 +36,6 @@ class TaskSerializer(ModelSerializer):
 
 class TaskTextSerializer(ModelSerializer):
     task = TaskSerializer(many=False, read_only=True)
-    title = serializers.CharField(source="task.title")
 
     class Meta:
         model = TaskText

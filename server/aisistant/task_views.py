@@ -84,7 +84,7 @@ def task_text(request, task_id):
 
     if request.method == "GET":
         try:
-            task_text = TaskText.objects.get(task=task)
+            task_text = TaskText.objects.get(task_id=task_id)
         except TaskText.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -94,14 +94,16 @@ def task_text(request, task_id):
     elif request.method == "POST":
         data = request.data
         content = data.get("content")
+        title = data.get("title")
         if content is not None:
-            new_tasktext = TaskText(title=task.title, task=task, content=content)
+            new_tasktext = TaskText(title=title, task=task, content=content)
             new_tasktext.save()
             serializer = TaskTextSerializer(new_tasktext, many=False)
             return Response(serializer.data)
 
     elif request.method == "PUT":
         data = request.data
+        print("TRYING")
         task_text = TaskText.objects.get(task=task)
         serializer = TaskTextSerializer(instance=task_text, data=data, partial=True)
         if serializer.is_valid():
