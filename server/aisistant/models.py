@@ -35,3 +35,9 @@ class Task(models.Model):
     heading = models.ForeignKey(
         Heading, null=True, blank=True, on_delete=models.CASCADE
     )
+
+
+class TaskText(models.Model):
+    task = models.OneToOneField(Task, on_delete=models.CASCADE, primary_key=True)
+    title = models.TextField(null=True)
+    content = models.TextField(null=True)
