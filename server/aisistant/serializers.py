@@ -10,6 +10,7 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = ("id",)
 
+
 class UserExtendedSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="user.id")
     name = serializers.CharField(source="user.username")
@@ -30,6 +31,14 @@ class TaskSerializer(ModelSerializer):
 
     class Meta:
         model = Task
+        fields = "__all__"
+
+
+class TaskTextSerializer(ModelSerializer):
+    task = TaskSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = TaskText
         fields = "__all__"
 
 

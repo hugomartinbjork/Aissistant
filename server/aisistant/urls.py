@@ -18,4 +18,6 @@ urlpatterns = [
     ## Headings
     path("heading/<int:ws_id>/<int:order>", stage_views.heading_detail),
     path("headings/<int:ws_id>", stage_views.HeadingView.as_view()),
+    ## TaskTexts
+    path("tasktext/<int:task_id>", task_views.task_text),
 ]
