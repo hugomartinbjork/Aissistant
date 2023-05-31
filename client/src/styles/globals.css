@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100&family=Raleway:ital,wght@0,100;0,300;1,100&family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,100&family=Raleway:ital,wght@0,100;0,300;1,100&family=Roboto&display=swap");
 
 /* default body CSS for font and background*/
 body {
   margin: 0;
   background-color: rgb(0, 0, 0);
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
   color: white;
 }
 /* Navbar styling below */
@@ -54,4 +54,14 @@ nav {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+}
+
+.bodyText {
+  font-family: "Raleway", sans-serif;
+  color: white;
+  transition: background-color 0.3s ease; /* Add transition for smooth effect */
+  &:hover {
+    transform: scale(1.05);
+    text-decoration: underline;
+  }
 }

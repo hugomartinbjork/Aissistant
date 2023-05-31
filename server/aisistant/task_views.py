@@ -103,7 +103,6 @@ def task_text(request, task_id):
 
     elif request.method == "PUT":
         data = request.data
-        print("TRYING")
         task_text = TaskText.objects.get(task=task)
         serializer = TaskTextSerializer(instance=task_text, data=data, partial=True)
         if serializer.is_valid():
@@ -115,3 +114,43 @@ def task_text(request, task_id):
         task_text = TaskText.objects.get(task=task)
         task_text.delete()
         return Response("Successful deletion", status=status.HTTP_200_OK)
+
+
+@api_view(["PUT"])
+def assign_user(request, user_id, task_id):
+    try:
+        task = Task.objects.get(task_id=task_id)
+    except Task.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        user = UserExtended.objects.get(user_id=user_id)
+    except UserExtended.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "PUT":
+        if task.assigned:
+            task.assigned = user
+        else:
+            task.assigned = user
+        task.save()
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["PUT"])
+def clear_assigned_user(request, task_id):
+    try:
+        task = Task.objects.get(task_id=task_id)
+    except Task.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "PUT":
+        task.assigned = None  # Clear the assigned relation
+        task.save()
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)

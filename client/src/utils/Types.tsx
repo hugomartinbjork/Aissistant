@@ -16,7 +16,7 @@ export interface SignUpData {
 
 export interface Task {
   task_id: number;
-  assigned: User;
+  assigned?: number;
   workspace: Workspace;
   title: string;
   todo: string;

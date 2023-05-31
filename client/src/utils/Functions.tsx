@@ -53,6 +53,16 @@ export const getUsers = async () => {
   }
 };
 
+export const getUser = async (user_id: number) => {
+  try {
+    const resp = await fetch(HOST + "singleuser/" + user_id);
+    const data = await resp.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 // <Workspace>
 
 export const getWorkspaceById = async (ws_id: any) => {
@@ -319,6 +329,36 @@ export const deleteTaskText = async (task_id: number) => {
     const resp = await fetch(HOST + "tasktext/" + task_id, {
       method: "DELETE",
     });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const assignUserToTask = async (task_id: number, user_id: number) => {
+  try {
+    const resp = await fetch(HOST + "assign/" + task_id + "/" + user_id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await resp.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const clearTaskAssign = async (task_id: number) => {
+  try {
+    const resp = await fetch(HOST + "clearassigned/" + task_id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await resp.json();
+    return data;
   } catch (err) {
     console.log(err);
   }

@@ -10,14 +10,14 @@ from knox.models import AuthToken
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
+
 # Create your views here.
 class Login(APIView):
-
     def post(self, request):
-        '''Login a user using credentials username and password. 
-        returns User along with auth token'''
-        email = request.data.get('email')
-        password = request.data.get('password')
+        """Login a user using credentials username and password.
+        returns User along with auth token"""
+        email = request.data.get("email")
+        password = request.data.get("password")
         if not email or not password:
             raise AuthenticationFailed
         auth = authenticate(username=email, password=password)
@@ -32,7 +32,7 @@ class Login(APIView):
         serialized_user = UserSerializer(user)
         data = {
             "user": serialized_user.data,
-            "token": AuthToken.objects.create(auth)[1]
+            "token": AuthToken.objects.create(auth)[1],
         }
         return Response(data, status=status.HTTP_200_OK)
 
@@ -51,14 +51,16 @@ class Users(APIView):
             data = request.data
         except:
             return Response("Error")
-        password = make_password(data['password'])
-        tmp = User.objects.create(
-            username=data['email'], password=password)
+        password = make_password(data["password"])
+        tmp = User.objects.create(username=data["email"], password=password)
         new = UserExtended.objects.create(
             user=tmp,
         )
         UserExtended.save(new)
-        return Response("A new user has been added to the system", status=status.HTTP_200_OK)
+        return Response(
+            "A new user has been added to the system", status=status.HTTP_200_OK
+        )
+
 
 @api_view(["GET", "PUT", "DELETE"])
 def user_detail_by_ws(request, ws_id):
@@ -67,5 +69,16 @@ def user_detail_by_ws(request, ws_id):
     except UserExtended.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == "GET":
-        serializer = UserExtendedSerializer(ws.users.all(),many=True)
+        serializer = UserExtendedSerializer(ws.users.all(), many=True)
+        return Response(serializer.data)
+
+
+@api_view(["GET"])
+def single_user(request, user_id):
+    try:
+        user = UserExtended.objects.get(user_id=user_id)
+    except UserExtended.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == "GET":
+        serializer = UserExtendedSerializer(user, many=False)
         return Response(serializer.data)
