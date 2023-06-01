@@ -108,6 +108,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('PASSWORD'),
         'HOST': os.environ.get('HOST'),
         'PORT': os.environ.get('PORT'),
+        'CONN_MAX_AGE': 60,
     }}
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
