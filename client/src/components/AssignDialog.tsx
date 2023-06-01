@@ -134,7 +134,7 @@ export const AssignDialog = (props: Props) => {
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
-                        width: "40%",
+                        width: "50%",
                         alignItems: "center",
                       }}
                     >
