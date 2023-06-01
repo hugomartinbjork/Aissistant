@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['aissistant-production.up.railway.app']
-CORS_ORIGIN_WHITELIST = ['https://aissistant-official.vercel.app', 'http://localhost:3000']
+CORS_ORIGIN_WHITELIST = ['https://aissistant-official.vercel.app']
 CSRF_TRUSTED_ORIGINS = ['aissistant-production.up.railway.app']
 # Application definition
 
@@ -63,8 +63,8 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
