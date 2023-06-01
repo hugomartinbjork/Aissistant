@@ -29,9 +29,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://aissistant-oulhff87p-hugomartinbjork.vercel.app', 'https://aissistant-production.up.railway.app']
+ALLOWED_HOSTS = ['https://aissistant-production.up.railway.app']
 CORS_ORIGIN_ALLOW_ALL = True
-CSRF_TRUSTED_ORIGINS = ['https://aissistant-oulhff87p-hugomartinbjork.vercel.app', 'https://aissistant-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://aissistant-production.up.railway.app']
 # Application definition
 
 INSTALLED_APPS = [
