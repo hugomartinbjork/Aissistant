@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['aissistant-production.up.railway.app']
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ['https://aissistant-official.vercel.app', 'http://localhost:3000']
 CSRF_TRUSTED_ORIGINS = ['aissistant-production.up.railway.app']
 # Application definition
 
