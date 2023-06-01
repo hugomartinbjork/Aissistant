@@ -26,16 +26,19 @@ export const AuthProvider = ({ children }: any) => {
   const loginUser = async (e: any) => {
     e.preventDefault()
     try {
-      const resp = await fetch('http://127.0.0.1:8000/aisistant/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: e.target.email.value,
-          password: e.target.password.value,
-        }),
-      })
+      const resp = await fetch(
+        'https://aissistant-production.up.railway.app/aisistant/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: e.target.email.value,
+            password: e.target.password.value,
+          }),
+        }
+      )
       const data = await resp.json()
       const accessToken = data.token
       const userId = data.user.id
