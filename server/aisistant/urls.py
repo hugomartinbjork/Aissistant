@@ -23,6 +23,7 @@ urlpatterns = [
     ## TaskTexts
     path("tasktext/<int:task_id>", task_views.task_text),
     ## Assign user to task
-    path("assign/<int:task_id>/<int:user_id>", task_views.assign_user),
+    # path("assign/<int:task_id>/<int:user_id>", task_views.assign_user),
+    path("assign/<int:task_id>/<str:user_id_list>", task_views.assign_user),
     path("clearassigned/<int:task_id>", task_views.clear_assigned_user),
 ]

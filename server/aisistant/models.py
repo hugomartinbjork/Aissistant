@@ -23,8 +23,10 @@ class Heading(models.Model):
 
 class Task(models.Model):
     task_id = models.AutoField(primary_key=True)
-    assigned = models.ForeignKey(
-        UserExtended, null=True, blank=True, on_delete=models.CASCADE
+    assigned = models.ManyToManyField(
+        UserExtended,
+        related_name="users",
+        blank=True,
     )
     workspace = models.ForeignKey(
         WorkSpace, null=True, blank=True, on_delete=models.CASCADE

@@ -1,45 +1,40 @@
-import styles from './styles.module.css'
-import BoardStage from '@/components/BoardStage'
-import { PostTask, Task, UpdateTask, Workspace } from '@/utils/Types'
-import { useContext, useEffect, useState } from 'react'
-import {
-  createTask,
-  getTask,
-  getTasksByWorkspace,
-  updateTask,
-} from '@/utils/Functions'
-import { useRouter } from 'next/router'
-import withAuth from '@/context/WithAuth'
-import AuthContext from '@/context/AuthContext'
-import Dropdown from '@/components/Dropdown'
-import { MyContext } from '@/context/DataProvider'
+import styles from "./styles.module.css";
+import BoardStage from "@/components/BoardStage";
+import { PostTask, Task, UpdateTask } from "@/utils/Types";
+import { useContext, useEffect, useState } from "react";
+import { createTask, getTask, updateTask } from "@/utils/Functions";
+import { useRouter } from "next/router";
+import withAuth from "@/context/WithAuth";
+import AuthContext from "@/context/AuthContext";
+import Dropdown from "@/components/Dropdown";
+import { MyContext } from "@/context/DataProvider";
 
 export default withAuth(function Board() {
-  const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
-  const [loading, setLoading] = useState<boolean>(true)
+  const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext);
+  const [loading, setLoading] = useState<boolean>(true);
   const {
     query: { boardId },
-  } = useRouter()
-  const [openDialog, setOpenDialog] = useState<boolean>(false)
+  } = useRouter();
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const handleChange = () => {
-    setOpenDialog(!openDialog)
-  }
+    setOpenDialog(!openDialog);
+  };
 
-  const { auth, user } = useContext(AuthContext)
+  const { auth, user } = useContext(AuthContext);
 
   const handleOnDrag = (e: React.DragEvent, taskId: number) => {
-    e.dataTransfer.setData('task', taskId.toString())
-  }
+    e.dataTransfer.setData("task", taskId.toString());
+  };
 
   const fetchTask = async (task_id: number) => {
-    const data = await getTask(task_id)
-    return data
-  }
+    const data = await getTask(task_id);
+    return data;
+  };
   const changeTask = async (task_id: number, order: number) => {
-    const newData: UpdateTask = { task_id: task_id, order: order }
-    await updateTask(newData)
-  }
+    const newData: UpdateTask = { task_id: task_id, order: order };
+    await updateTask(newData);
+  };
 
   const submitTask = async (title: string, todo: string, deadline?: Date) => {
     if (workspace) {
@@ -48,40 +43,40 @@ export default withAuth(function Board() {
         title: title,
         todo: todo,
         deadline,
-      }
-      await createTask(data)
-      setOpenDialog(false)
-      await fetchWorkspaceTasks()
+      };
+      await createTask(data);
+      setOpenDialog(false);
+      await fetchWorkspaceTasks();
     } else {
-      setOpenDialog(false)
-      return
+      setOpenDialog(false);
+      return;
     }
-  }
+  };
   const fetchWorkspaceTasks = async () => {
-    setTasks(workspace?.id as number)
-  }
+    setTasks(workspace?.id as number);
+  };
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     if (workspace) {
-      setTasks(workspace.id)
+      setTasks(workspace.id);
     }
-    setLoading(false)
-  }, [workspace])
+    setLoading(false);
+  }, [workspace]);
   useEffect(() => {
     if (boardId) {
-      setWorkspace(parseInt(boardId as string))
+      setWorkspace(parseInt(boardId as string));
     }
-  }, [boardId])
+  }, [boardId]);
 
   const handleOnDrop = async (e: React.DragEvent, targetStage: number) => {
-    const taskId = parseInt(e.dataTransfer.getData('task') as string)
-    const currentTask: Task = await fetchTask(taskId)
+    const taskId = parseInt(e.dataTransfer.getData("task") as string);
+    const currentTask: Task = await fetchTask(taskId);
     if (currentTask && workspace && tasks) {
       await changeTask(currentTask.task_id, targetStage).then(() => {
-        fetchWorkspaceTasks()
-      })
+        fetchWorkspaceTasks();
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -114,5 +109,5 @@ export default withAuth(function Board() {
         <h1>Loading</h1>
       )}
     </>
-  )
-})
+  );
+});

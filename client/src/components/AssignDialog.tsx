@@ -4,16 +4,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  FormHelperText,
   IconButton,
-  TextField,
 } from "@mui/material";
 import CloseSharpIcon from "@mui/icons-material/CloseSharp";
 import { StandardButton } from "./StandardButton";
-import { StandardInput } from "./StandardInput";
-import { MiniUser, Task, User } from "@/utils/Types";
+import { MiniUser, Task } from "@/utils/Types";
 import { MyContext } from "@/context/DataProvider";
 import { getWorkspacesUsers } from "@/utils/Functions";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -31,16 +27,18 @@ interface Props {
 export const AssignDialog = (props: Props) => {
   const { workspace } = useContext(MyContext);
   const [users, setUsers] = useState<MiniUser[]>([]);
-  const [assignedUser, setAssignedUser] = useState<MiniUser>();
+  const [assignedUsers, setAssignedUsers] = useState<MiniUser[]>([]);
 
   const fetchUsers = async () => {
     if (workspace) {
       const data = await getWorkspacesUsers(workspace.id);
       const list = data as MiniUser[];
       setUsers([...data]);
-      const current = list.filter((user) => user.id === props.task.assigned);
+      const current = list.filter((user) =>
+        props.task.assigned?.includes(user.id)
+      );
       if (current) {
-        setAssignedUser(current[0]);
+        setAssignedUsers([...current]);
       }
     }
   };
@@ -49,8 +47,11 @@ export const AssignDialog = (props: Props) => {
   }, [props.task]);
 
   const handleSubmit = async () => {
-    if (assignedUser) {
-      await props.handleSubmit(assignedUser?.id);
+    let str: string = "";
+    if (assignedUsers && assignedUsers.length > 0) {
+      const userIds: string[] = assignedUsers.map((user) => user.id.toString());
+      str = userIds.join(",");
+      await props.handleSubmit(str);
     } else {
       handleReset();
     }
@@ -60,10 +61,13 @@ export const AssignDialog = (props: Props) => {
   };
 
   const handleAssignClick = (u: MiniUser) => {
-    if (assignedUser && assignedUser.id === u.id) {
-      setAssignedUser(undefined);
+    if (assignedUsers && assignedUsers.some((user) => user.id === u.id)) {
+      const updatedAssignedUsers = assignedUsers.filter(
+        (user) => user.id !== u.id
+      );
+      setAssignedUsers(updatedAssignedUsers);
     } else {
-      setAssignedUser(u);
+      setAssignedUsers([...assignedUsers, u]);
     }
   };
 
@@ -114,7 +118,7 @@ export const AssignDialog = (props: Props) => {
       >
         {props.confirmAssign ? (
           <>
-            <h1>User Assigned!</h1>
+            <h1>Users Assigned!</h1>
           </>
         ) : (
           <>
@@ -150,7 +154,8 @@ export const AssignDialog = (props: Props) => {
                       >
                         {user.name}
                       </p>
-                      {assignedUser && assignedUser.id === user.id ? (
+                      {assignedUsers &&
+                      assignedUsers.some((u) => u.id === user.id) ? (
                         <>
                           <CheckCircleOutlineIcon
                             style={{ color: "aqua", marginLeft: "12px" }}

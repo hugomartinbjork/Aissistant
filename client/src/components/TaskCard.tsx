@@ -4,7 +4,7 @@ import { StandardButton } from "./StandardButton";
 import {
   updateTask,
   deleteTask,
-  assignUserToTask,
+  assignUsersToTask,
   getUser,
   clearTaskAssign,
 } from "@/utils/Functions";
@@ -26,7 +26,7 @@ const TaskCard = (props: Props) => {
   const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
-  const [assignedUserName, setAssignedUserName] = useState<string>("");
+  const [assignedUserNames, setAssignedUserNames] = useState<string[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const menuOpen = Boolean(anchorEl);
   const [confirm, setConfirm] = useState<boolean>(false);
@@ -62,7 +62,6 @@ const TaskCard = (props: Props) => {
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    console.log("trying");
     setAnchorEl(event.currentTarget);
   };
 
@@ -73,11 +72,11 @@ const TaskCard = (props: Props) => {
   const handleCloseAssign = () => {
     setOpenAssign(false);
   };
-  const handleSubmitAssign = async (user_id: number) => {
-    if (!user_id) {
+  const handleSubmitAssign = async (user_ids: string) => {
+    if (!user_ids) {
       setOpenAssign(false);
     } else {
-      const data = await assignUserToTask(props.task.task_id, user_id);
+      const data = await assignUsersToTask(props.task.task_id, user_ids);
 
       setConfirmAssign(true);
       setTimeout(() => {
@@ -110,10 +109,11 @@ const TaskCard = (props: Props) => {
   };
   const fetchUser = async () => {
     if (props.task.assigned) {
-      const d = await getUser(props.task.assigned);
-      if (d) {
-        setAssignedUserName(d.name);
-      }
+      const names: string[] = [];
+      const userPromises = props.task.assigned.map((id) => getUser(id));
+      const users = await Promise.all(userPromises);
+      users.map((u) => names.push(u.name));
+      setAssignedUserNames(names);
     }
   };
 
@@ -227,12 +227,15 @@ const TaskCard = (props: Props) => {
               position: "relative",
             }}
           >
-            {props.task.assigned && (
+            {props.task.assigned && props.task.assigned.length > 0 && (
               <div
-                style={{ display: "flex", alignItems: "center" }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  position: "relative",
+                }}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                onClick={() => console.log(props.task)}
               >
                 <PersonIcon style={{ color: "aqua", marginRight: "10px" }} />
                 {showTooltip && (
@@ -245,11 +248,28 @@ const TaskCard = (props: Props) => {
                       backgroundColor: "black",
                       color: "white",
                       fontSize: "12px",
-                      padding: "4px",
+                      marginBottom: "8px",
                       borderRadius: "4px",
+                      display: "flex",
+                      flexDirection: "column",
+                      padding: "8px",
+                      overflowY: "auto",
+                      minWidth: "140px",
                     }}
                   >
-                    {assignedUserName} is assigned to this task
+                    <>
+                      <span
+                        style={{
+                          textDecoration: "underline",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        Assigned to this task:
+                      </span>
+                      {assignedUserNames.map((name, index) => (
+                        <span key={index}>{name}</span>
+                      ))}
+                    </>
                   </span>
                 )}
               </div>

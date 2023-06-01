@@ -117,27 +117,29 @@ def task_text(request, task_id):
 
 
 @api_view(["PUT"])
-def assign_user(request, user_id, task_id):
+def assign_user(request, task_id, user_id_list):
     try:
         task = Task.objects.get(task_id=task_id)
     except Task.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    try:
-        user = UserExtended.objects.get(user_id=user_id)
-    except UserExtended.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    user_ids = user_id_list.split(",")  # Split the user_id_list by comma
+    user_ids = [
+        int(user_id) for user_id in user_ids
+    ]  # Convert the user IDs to integers
 
-    if request.method == "PUT":
-        if task.assigned:
-            task.assigned = user
-        else:
-            task.assigned = user
-        task.save()
-        serializer = TaskSerializer(task)
-        return Response(serializer.data)
+    # Iterate through the user IDs and assign them to the task
+    task.assigned.clear()
+    for user_id in user_ids:
+        try:
+            user = UserExtended.objects.get(user_id=user_id)
+            task.assigned.add(user)
+        except UserExtended.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    task.save()
+    serializer = TaskSerializer(task)
+    return Response(serializer.data)
 
 
 @api_view(["PUT"])
@@ -148,7 +150,7 @@ def clear_assigned_user(request, task_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == "PUT":
-        task.assigned = None  # Clear the assigned relation
+        task.assigned.clear()  # Clear the assigned relation
         task.save()
         serializer = TaskSerializer(task)
         return Response(serializer.data)
