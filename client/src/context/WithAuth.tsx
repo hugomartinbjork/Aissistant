@@ -1,25 +1,29 @@
-import { useRouter } from 'next/router'
 import { useEffect, useContext, useState } from 'react'
+import { useRouter } from 'next/router'
 import AuthContext from './AuthContext'
 
-const withAuth = (WrappedComponent: React.ComponentType) => {
-  return (props: any) => {
+const WithAuth = (WrappedComponent: React.ComponentType) => {
+  const WithAuthComponent = (props: any) => {
     const { auth } = useContext(AuthContext)
     const router = useRouter()
     const [authClient, setAuthClient] = useState('')
-    // Check if the user is authenticated
+
     useEffect(() => {
       if (!auth) {
-        router.push('/login') // Redirect to login page if not logged in
+        router.push('/login')
       }
     }, [auth, router])
+
     useEffect(() => {
       setAuthClient(auth)
-    }, [authClient, router])
+    }, [auth])
 
-    // Render the component only if the user is authenticated7
     return authClient ? <WrappedComponent {...props} /> : null
   }
+
+  WithAuthComponent.displayName = 'WithAuth'
+
+  return WithAuthComponent
 }
 
-export default withAuth
+export default WithAuth

@@ -5,53 +5,52 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from "@mui/material";
-import React from "react";
+} from '@mui/material'
+import React from 'react'
 
 interface Props {
-  open: boolean;
-  handleClose: any;
+  open: boolean
+  handleClose: any
 }
 export const TermsDialog = (props: Props) => {
   return (
     <Dialog open={props.open} onClose={props.handleClose}>
       <DialogTitle
         style={{
-          color: "white",
-          backgroundColor: "black",
-          border: "3px solid white",
-          borderBottom: "none",
+          color: 'white',
+          backgroundColor: 'black',
+          border: '3px solid white',
+          borderBottom: 'none',
         }}
       >
         Terms and Conditions
       </DialogTitle>
       <DialogContent
         style={{
-          backgroundColor: "black",
-          border: "3px solid white",
-          borderTop: "none",
-          color: "black",
+          backgroundColor: 'black',
+          border: '3px solid white',
+          borderTop: 'none',
+          color: 'black',
         }}
       >
-        <DialogContentText style={{ color: "white" }}>
-          These terms and conditions ("Agreement") set forth the general terms
-          and conditions of your use of the [insert name of web app] website and
-          any of its related products and services (collectively, "Service").
-          This Agreement is legally binding between you ("User", "you" or
-          "your") and [insert name of web app] ("[insert name of web app]",
-          "we", "us" or "our"). By accessing and using the Service, you
-          acknowledge that you have read, understood, and agree to be bound by
-          the terms of this Agreement. If you are entering into this Agreement
-          on behalf of a business or other legal entity, you represent that you
-          have the authority to bind such entity to this Agreement, in which
-          case the terms "User", "you" or "your" shall refer to such entity. If
-          you do not have such authority, or if you do not agree with the terms
-          of this Agreement, you must not accept this Agreement and may not
-          access and use the Service.
+        <DialogContentText style={{ color: 'white' }}>
+          These terms and conditions (Agreement) set forth the general terms and
+          conditions of your use of the [insert name of web app] website and any
+          of its related products and services (collectively, Service). This
+          Agreement is legally binding between you (User, you or your) and
+          [insert name of web app] ([insert name of web app], we, us or our). By
+          accessing and using the Service, you acknowledge that you have read,
+          understood, and agree to be bound by the terms of this Agreement. If
+          you are entering into this Agreement on behalf of a business or other
+          legal entity, you represent that you have the authority to bind such
+          entity to this Agreement, in which case the terms User, you or your
+          shall refer to such entity. If you do not have such authority, or if
+          you do not agree with the terms of this Agreement, you must not accept
+          this Agreement and may not access and use the Service.
           <br />
           <br />
           You acknowledge that we may collect and store your name and email
-          address ("User Information") as part of your use of the Service. Your
+          address (User Information) as part of your use of the Service. Your
           User Information will only be used for the purpose of providing you
           with the Service and for communication related to the Service. We will
           never share your User Information with third parties for marketing
@@ -83,7 +82,7 @@ export const TermsDialog = (props: Props) => {
               person or entity.
             </li>
             <li>
-              To engage in any other conduct that restricts or inhibits anyone's
+              To engage in any other conduct that restricts or inhibits anyones
               use or enjoyment of the Service, or which, as determined by us,
               may harm [insert name of web app] or users of the Service or
               expose them to liability.
@@ -111,19 +110,19 @@ export const TermsDialog = (props: Props) => {
       </DialogContent>
       <DialogActions
         style={{
-          color: "white",
-          backgroundColor: "black",
-          border: "3px solid white",
-          borderTop: "none",
+          color: 'white',
+          backgroundColor: 'black',
+          border: '3px solid white',
+          borderTop: 'none',
         }}
       >
         <Button
-          style={{ border: "1px solid white", color: "white" }}
+          style={{ border: '1px solid white', color: 'white' }}
           onClick={props.handleClose}
         >
           Close
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}

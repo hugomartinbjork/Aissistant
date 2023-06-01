@@ -1,10 +1,7 @@
 import {
   PostTask,
   SignUpData,
-  Task,
-  TaskText,
   UpdateTask,
-  Workspace,
   WorkspacePost,
   PostHeading,
   WorkspacePutL,
@@ -28,7 +25,7 @@ export const reWrite = async (str: string) => {
 }
 export const signUpUser = async ({ email, password }: SignUpData) => {
   try {
-    const resp = await fetch(HOST + '/users', {
+    const resp = await fetch(HOST + 'users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
