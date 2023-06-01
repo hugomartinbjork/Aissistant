@@ -82,9 +82,9 @@ const TaskCard = (props: Props) => {
       setConfirmAssign(true);
       setTimeout(() => {
         setConfirmAssign(false);
+        setWorkspace(workspace?.id as number);
         setOpenAssign(false);
-        window.location.reload();
-      }, 1500);
+      }, 1000);
     }
   };
 
@@ -96,8 +96,8 @@ const TaskCard = (props: Props) => {
       setTimeout(() => {
         setConfirmClear(false);
         setOpenAssign(false);
-        window.location.reload();
-      }, 1500);
+        setWorkspace(workspace?.id as number);
+      }, 1000);
     }
   };
 

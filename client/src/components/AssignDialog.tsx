@@ -49,7 +49,11 @@ export const AssignDialog = (props: Props) => {
   }, [props.task]);
 
   const handleSubmit = async () => {
-    await props.handleSubmit(assignedUser?.id);
+    if (assignedUser) {
+      await props.handleSubmit(assignedUser?.id);
+    } else {
+      handleReset();
+    }
   };
   const handleReset = async () => {
     await props.handleReset(props.task.task_id);
@@ -129,7 +133,8 @@ export const AssignDialog = (props: Props) => {
                       style={{
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "center",
+                        justifyContent: "space-between",
+                        width: "40%",
                         alignItems: "center",
                       }}
                     >
@@ -138,16 +143,25 @@ export const AssignDialog = (props: Props) => {
                           fontSize: "16px",
                           cursor: "pointer",
                           textDecoration: "underline",
+                          marginRight: "12px",
                         }}
                         key={user.id}
                         onClick={() => handleAssignClick(user)}
                       >
                         {user.name}
                       </p>
-                      {assignedUser && assignedUser.id === user.id && (
-                        <CheckCircleOutlineIcon
-                          style={{ color: "aqua", marginLeft: "12px" }}
-                        />
+                      {assignedUser && assignedUser.id === user.id ? (
+                        <>
+                          <CheckCircleOutlineIcon
+                            style={{ color: "aqua", marginLeft: "12px" }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircleOutlineIcon
+                            style={{ marginLeft: "12px", opacity: "0.5" }}
+                          />
+                        </>
                       )}
                     </div>
                   ))}
@@ -157,8 +171,8 @@ export const AssignDialog = (props: Props) => {
         )}
       </DialogContent>
       <DialogActions>
-        <StandardButton text="Assign" onClick={() => handleSubmit()} />
-        <StandardButton text="Reset" onClick={() => handleReset()} />
+        <StandardButton text="Done" onClick={() => handleSubmit()} />
+        {/* <StandardButton text="Reset" onClick={() => handleReset()} /> */}
       </DialogActions>
     </Dialog>
   );
