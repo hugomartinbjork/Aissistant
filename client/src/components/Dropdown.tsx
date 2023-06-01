@@ -41,6 +41,7 @@ const Dropdown = (props: Props) => {
   const leaveWs = async (user_id: number) => {
     const workspacePutData: WorkspacePutL = {
       user_id: user_id,
+      ws_id: workspace?.id,
     }
     await updateWorkspaceL(workspacePutData)
     router.push('/board')

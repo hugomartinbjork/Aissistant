@@ -45,6 +45,7 @@ class WorkSpaceView(APIView):
     ## Leave WS
     def put(self, request, user_id):
         ws = WorkSpace.objects.get(users = user_id)
+        print(ws, user_id)
         user= UserExtended.objects.get(user=user_id) 
         data = request.data
         if ws:
@@ -58,6 +59,32 @@ class WorkSpaceView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def ws_leave(request, ws_id, user_id):
+    '''workspaces/<int:ws_id>'''
+    try:
+        ws = WorkSpace.objects.get(id=ws_id)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+ ## Leave WS
+    if request.method == 'PUT':
+        user= UserExtended.objects.get(user=user_id) 
+        data = request.data
+        if ws:
+            if user in ws.users.all():
+                ws.users.remove(user)
+                if ws.users.count() == 0:
+                    ws.delete()
+                    return Response('Workspace deleted', status=status.HTTP_200_OK)
+        serializer = WorkSpaceSerializer(instance=ws, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         
 @api_view(['GET', 'PUT', 'DELETE'])
 def ws_detail(request, ws_id):

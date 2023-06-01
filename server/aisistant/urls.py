@@ -10,6 +10,7 @@ urlpatterns = [
     path("singleuser/<int:user_id>", views.single_user),
     # Create workspace
     path("workspaces/<int:user_id>", ws_views.WorkSpaceView.as_view()),
+    path("workspaces/<int:ws_id>/<int:user_id>", ws_views.ws_leave),
     path("workspace/<int:ws_id>", ws_views.ws_detail),
     ## TASk
     # Create workspace
