@@ -20,6 +20,7 @@ import {
   updateWorkspaceA,
 } from '@/utils/Functions'
 import { MiniUser } from '@/utils/Types'
+import AuthContext from '@/context/AuthContext'
 
 interface Props {
   open: boolean
@@ -31,6 +32,7 @@ interface Props {
 
 export const InviteDialog = (props: Props) => {
   const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
+  const { auth, user } = useContext(AuthContext)
   const [users, setUsers] = useState<MiniUser[]>([])
   const [wsUsers, setWsUsers] = useState<MiniUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<MiniUser[]>([])
@@ -40,13 +42,13 @@ export const InviteDialog = (props: Props) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await getUsers()
+      const response = await getUsers(auth as string)
       setUsers(response)
     }
     fetchUsers()
     const fetchWorkspaceUsers = async () => {
       if (workspace) {
-        const response = await getWorkspacesUsers(workspace?.id)
+        const response = await getWorkspacesUsers(auth, workspace?.id)
         setWsUsers(response)
       }
     }
@@ -67,11 +69,11 @@ export const InviteDialog = (props: Props) => {
 
   const addUser = async (user_id: number) => {
     if (workspace) {
-      await updateWorkspaceA({ user_id, ws_id: workspace.id })
+      await updateWorkspaceA(auth, { user_id, ws_id: workspace.id })
       setWorkspace(workspace.id)
 
       // Fetch the updated workspace users after adding a new user
-      const updatedUsers = await getWorkspacesUsers(workspace.id)
+      const updatedUsers = await getWorkspacesUsers(auth, workspace.id)
       setWsUsers(updatedUsers)
     }
   }
