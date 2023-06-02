@@ -12,6 +12,7 @@ import { StandardButton } from './StandardButton'
 import { StandardInput } from './StandardInput'
 import { createStage } from '@/utils/Functions'
 import { MyContext } from '@/context/DataProvider'
+import AuthContext from '@/context/AuthContext'
 
 interface Props {
   open: boolean
@@ -21,13 +22,14 @@ interface Props {
 }
 
 export const CreateStage = (props: Props) => {
-  const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
+  const { setWorkspace } = useContext(MyContext)
+  const { auth } = useContext(AuthContext)
   const uploadStage = async (e: any) => {
     e.preventDefault()
     const text = e.target.heading.value
     const order = e.target.order.value
     const ws_id = props.ws_id
-    await createStage({ ws_id, text, order })
+    await createStage(auth, { ws_id, text, order })
     setWorkspace(ws_id)
     props.handleClose()
   }

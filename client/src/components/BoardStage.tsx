@@ -1,32 +1,34 @@
-import React, { useContext, useState } from "react";
-import TaskCard from "./TaskCard";
-import { Heading, Task } from "@/utils/Types";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { deleteStage } from "@/utils/Functions";
-import { MyContext } from "@/context/DataProvider";
-import { ConfirmationDialog } from "./ConfirmationDialog";
+import React, { useContext, useState } from 'react'
+import TaskCard from './TaskCard'
+import { Heading, Task } from '@/utils/Types'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import { deleteStage } from '@/utils/Functions'
+import { MyContext } from '@/context/DataProvider'
+import { ConfirmationDialog } from './ConfirmationDialog'
+import AuthContext from '@/context/AuthContext'
 interface Props {
-  heading: Heading;
-  tasks?: Task[][];
-  handleOnDrag?: any;
-  handleOnDrop?: any;
+  heading: Heading
+  tasks?: Task[][]
+  handleOnDrag?: any
+  handleOnDrop?: any
 }
 
 const BoardStage = (props: Props) => {
-  const [confirm, setConfirm] = useState<boolean>(false);
-  const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext);
+  const [confirm, setConfirm] = useState<boolean>(false)
+  const { setWorkspace } = useContext(MyContext)
+  const { auth } = useContext(AuthContext)
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   const handleDelete = async (ws_id: number, order: number) => {
-    await deleteStage(ws_id, order);
-    setConfirm(false);
-    setWorkspace(ws_id);
-  };
+    await deleteStage(auth, ws_id, order)
+    setConfirm(false)
+    setWorkspace(ws_id)
+  }
   const handleConf = () => {
-    setConfirm(!confirm);
-  };
+    setConfirm(!confirm)
+  }
   return (
     <>
       {confirm ? (
@@ -43,36 +45,36 @@ const BoardStage = (props: Props) => {
       ) : null}
       <div
         style={{
-          width: "370px",
-          height: "80vh",
-          border: "2px solid white",
-          borderRadius: "10px",
-          display: "flex",
+          width: '370px',
+          height: '80vh',
+          border: '2px solid white',
+          borderRadius: '10px',
+          display: 'flex',
           margin: 5,
-          flexDirection: "column",
-          alignItems: "center",
-          position: "relative",
-          overflow: "auto",
+          flexDirection: 'column',
+          alignItems: 'center',
+          position: 'relative',
+          overflow: 'auto',
         }}
         onDragOver={handleDragOver}
         onDrop={props.handleOnDrop}
       >
         <div
           style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            borderBottom: "1px solid white",
-            marginBottom: "5px",
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderBottom: '1px solid white',
+            marginBottom: '5px',
           }}
         >
           <div
             style={{
               flex: 2,
-              display: "flex",
-              justifyContent: "center",
+              display: 'flex',
+              justifyContent: 'center',
             }}
           >
             <h2
@@ -97,12 +99,12 @@ const BoardStage = (props: Props) => {
                   key={task.title}
                   handleOnDrag={props.handleOnDrag}
                 />
-              );
+              )
             })
           : null}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default BoardStage;
+export default BoardStage

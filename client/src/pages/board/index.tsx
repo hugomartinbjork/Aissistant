@@ -4,13 +4,13 @@ import { useContext, useEffect, useState } from 'react'
 import { createWorkspace, getWorkspacesByUser } from '@/utils/Functions'
 import ChooseWorkspace from '@/components/ChooseWorkspace'
 import { useRouter } from 'next/router'
-import WithAuth from '@/context/WithAuth'
+import withAuth from '@/context/WithAuth'
 import AuthContext from '@/context/AuthContext'
 import { StandardButton } from '@/components/StandardButton'
 import { StandardInput } from '@/components/StandardInput'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 
-export default WithAuth(function ChooseBoard() {
+export default withAuth(function ChooseBoard() {
   const router = useRouter()
   const [workspaces, setWorkspaces] = useState<Workspace[]>([])
   const [open, setOpen] = useState<boolean>(false)
@@ -22,7 +22,7 @@ export default WithAuth(function ChooseBoard() {
   const handleCreateWorkspace = async (e: any) => {
     e.preventDefault()
     if (open && e.target.workspace.value !== '') {
-      const new_ws = await createWorkspace({
+      const new_ws = await createWorkspace(auth, {
         user_id: user as number,
         name: e.target.workspace.value,
       })
@@ -33,7 +33,10 @@ export default WithAuth(function ChooseBoard() {
   }
 
   const fetchWorkspaces = async () => {
-    const data = (await getWorkspacesByUser(parseInt(user))) as Workspace[]
+    const data = (await getWorkspacesByUser(
+      auth,
+      parseInt(user)
+    )) as Workspace[]
     setWorkspaces(data)
     return data
   }

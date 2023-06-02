@@ -13,6 +13,7 @@ import { MiniUser, Task } from '@/utils/Types'
 import { MyContext } from '@/context/DataProvider'
 import { getWorkspacesUsers } from '@/utils/Functions'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import AuthContext from '@/context/AuthContext'
 
 interface Props {
   open: boolean
@@ -26,12 +27,13 @@ interface Props {
 
 export const AssignDialog = (props: Props) => {
   const { workspace } = useContext(MyContext)
+  const { auth } = useContext(AuthContext)
   const [users, setUsers] = useState<MiniUser[]>([])
   const [assignedUsers, setAssignedUsers] = useState<MiniUser[]>([])
 
   const fetchUsers = async () => {
     if (workspace) {
-      const data = await getWorkspacesUsers(workspace.id)
+      const data = await getWorkspacesUsers(auth, workspace.id)
       const list = data as MiniUser[]
       setUsers([...data])
       const current = list.filter((user) =>
@@ -177,7 +179,6 @@ export const AssignDialog = (props: Props) => {
       </DialogContent>
       <DialogActions>
         <StandardButton text="Done" onClick={() => handleSubmit()} />
-        {/* <StandardButton text="Reset" onClick={() => handleReset()} /> */}
       </DialogActions>
     </Dialog>
   )

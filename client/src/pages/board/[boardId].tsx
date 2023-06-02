@@ -4,12 +4,12 @@ import { PostTask, Task, UpdateTask } from '@/utils/Types'
 import { useContext, useEffect, useState } from 'react'
 import { createTask, getTask, updateTask } from '@/utils/Functions'
 import { useRouter } from 'next/router'
-import WithAuth from '@/context/WithAuth'
+import withAuth from '@/context/WithAuth'
 import AuthContext from '@/context/AuthContext'
 import Dropdown from '@/components/Dropdown'
 import { MyContext } from '@/context/DataProvider'
 
-export default WithAuth(function Board() {
+export default withAuth(function Board() {
   const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
   const [loading, setLoading] = useState<boolean>(true)
   const {
@@ -28,12 +28,12 @@ export default WithAuth(function Board() {
   }
 
   const fetchTask = async (task_id: number) => {
-    const data = await getTask(task_id)
+    const data = await getTask(auth, task_id)
     return data
   }
   const changeTask = async (task_id: number, order: number) => {
     const newData: UpdateTask = { task_id: task_id, order: order }
-    await updateTask(newData)
+    await updateTask(auth, newData)
   }
 
   const submitTask = async (title: string, todo: string, deadline?: Date) => {
@@ -44,7 +44,7 @@ export default WithAuth(function Board() {
         todo: todo,
         deadline,
       }
-      await createTask(data)
+      await createTask(auth, data)
       setOpenDialog(false)
       await fetchWorkspaceTasks()
     } else {

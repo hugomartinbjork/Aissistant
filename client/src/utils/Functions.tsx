@@ -1,7 +1,10 @@
 import {
   PostTask,
   SignUpData,
+  Task,
+  TaskText,
   UpdateTask,
+  Workspace,
   WorkspacePost,
   PostHeading,
   WorkspacePutL,
@@ -40,9 +43,13 @@ export const signUpUser = async ({ email, password }: SignUpData) => {
   }
 }
 
-export const getUsers = async () => {
+export const getUsers = async (token: string) => {
   try {
-    const resp = await fetch(HOST + 'users')
+    const resp = await fetch(HOST + 'users', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const data = await resp.json()
     return data
   } catch (err) {
@@ -50,9 +57,13 @@ export const getUsers = async () => {
   }
 }
 
-export const getUser = async (user_id: number) => {
+export const getUser = async (token: string, user_id: number) => {
   try {
-    const resp = await fetch(HOST + 'singleuser/' + user_id)
+    const resp = await fetch(HOST + 'singleuser/' + user_id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const data = await resp.json()
     return data
   } catch (err) {
@@ -62,27 +73,39 @@ export const getUser = async (user_id: number) => {
 
 // <Workspace>
 
-export const getWorkspaceById = async (ws_id: any) => {
+export const getWorkspaceById = async (token: string, ws_id: any) => {
   try {
-    const resp = await fetch(HOST + 'workspace/' + ws_id)
+    const resp = await fetch(HOST + 'workspace/' + ws_id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const data = await resp.json()
     return data
   } catch (err) {
     console.log(err)
   }
 }
-export const getWorkspacesByUser = async (user_id: number) => {
+export const getWorkspacesByUser = async (token: string, user_id: number) => {
   try {
-    const resp = await fetch(HOST + 'workspaces/' + user_id)
+    const resp = await fetch(HOST + 'workspaces/' + user_id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const data = await resp.json()
     return data
   } catch (err) {
     console.log(err)
   }
 }
-export const getWorkspacesUsers = async (ws_id: number) => {
+export const getWorkspacesUsers = async (token: string, ws_id: number) => {
   try {
-    const resp = await fetch(HOST + 'users/' + ws_id)
+    const resp = await fetch(HOST + 'users/' + ws_id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const data = await resp.json()
     return data
   } catch (err) {
@@ -90,12 +113,16 @@ export const getWorkspacesUsers = async (ws_id: number) => {
   }
 }
 
-export const createWorkspace = async ({ user_id, name }: WorkspacePost) => {
+export const createWorkspace = async (
+  token: string,
+  { user_id, name }: WorkspacePost
+) => {
   try {
     const resp = await fetch(HOST + 'workspaces/' + user_id, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         name,
@@ -108,26 +135,29 @@ export const createWorkspace = async ({ user_id, name }: WorkspacePost) => {
   }
 }
 
-export const deleteWorkspace = async (ws_id: number) => {
+export const deleteWorkspace = async (token: string, ws_id: number) => {
   try {
     const resp = await fetch(HOST + 'workspace/' + ws_id, {
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
   } catch (err) {
     console.log(err)
   }
 }
 // Update / Add user to workspace
-export const updateWorkspaceA = async ({
-  name,
-  ws_id,
-  user_id,
-}: WorkspacePutA) => {
+export const updateWorkspaceA = async (
+  token: string,
+  { name, ws_id, user_id }: WorkspacePutA
+) => {
   try {
     const resp = await fetch(HOST + 'workspace/' + ws_id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         name: name,
@@ -141,16 +171,16 @@ export const updateWorkspaceA = async ({
 }
 
 // Update / Remove user from workspace
-export const updateWorkspaceL = async ({
-  name,
-  ws_id,
-  user_id,
-}: WorkspacePutL) => {
+export const updateWorkspaceL = async (
+  token: string,
+  { name, ws_id, user_id }: WorkspacePutL
+) => {
   try {
     const resp = await fetch(HOST + 'workspaces/' + ws_id + '/' + user_id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         name,
@@ -164,9 +194,13 @@ export const updateWorkspaceL = async ({
 
 // <Workspace/>
 
-export const getTasksByWorkspace = async (ws_id: number) => {
+export const getTasksByWorkspace = async (token: string, ws_id: number) => {
   try {
-    const resp = await fetch(HOST + 'tasks/' + ws_id)
+    const resp = await fetch(HOST + 'tasks/' + ws_id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const data = await resp.json()
     return data
   } catch (err) {
@@ -174,9 +208,13 @@ export const getTasksByWorkspace = async (ws_id: number) => {
   }
 }
 
-export const getTask = async (task_id: number) => {
+export const getTask = async (token: string, task_id: number) => {
   try {
-    const resp = await fetch(HOST + 'task/' + task_id)
+    const resp = await fetch(HOST + 'task/' + task_id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const data = await resp.json()
     return data
   } catch (err) {
@@ -184,17 +222,16 @@ export const getTask = async (task_id: number) => {
   }
 }
 
-export const createTask = async ({
-  ws_id,
-  title,
-  todo,
-  deadline,
-}: PostTask) => {
+export const createTask = async (
+  token: string,
+  { ws_id, title, todo, deadline }: PostTask
+) => {
   try {
     const resp = await fetch(HOST + 'tasks/' + ws_id, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         title: title,
@@ -209,19 +246,16 @@ export const createTask = async ({
   }
 }
 
-export const updateTask = async ({
-  task_id,
-  assigned,
-  title,
-  todo,
-  deadline,
-  order,
-}: UpdateTask) => {
+export const updateTask = async (
+  token: string,
+  { task_id, assigned, title, todo, deadline, order }: UpdateTask
+) => {
   try {
     const resp = await fetch(HOST + 'task/' + task_id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         title: title,
@@ -235,10 +269,13 @@ export const updateTask = async ({
     console.log(err)
   }
 }
-export const deleteTask = async (task_id: number) => {
+export const deleteTask = async (token: string, task_id: number) => {
   try {
     const resp = await fetch(HOST + 'task/' + task_id, {
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
   } catch (err) {
     console.log(err)
@@ -246,12 +283,16 @@ export const deleteTask = async (task_id: number) => {
 }
 
 // <HEADINGS>
-export const createStage = async ({ ws_id, text, order }: PostHeading) => {
+export const createStage = async (
+  token: string,
+  { ws_id, text, order }: PostHeading
+) => {
   try {
     const resp = await fetch(HOST + 'headings/' + ws_id, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         text,
@@ -263,35 +304,46 @@ export const createStage = async ({ ws_id, text, order }: PostHeading) => {
   }
 }
 
-export const deleteStage = async (ws_id: number, order: number) => {
+export const deleteStage = async (
+  token: string,
+  ws_id: number,
+  order: number
+) => {
   try {
     const resp = await fetch(HOST + 'heading/' + ws_id + '/' + order, {
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
   } catch (err) {
     console.log(err)
   }
 }
 
-export const getTaskText = async (task_id: number) => {
+export const getTaskText = async (token: string, task_id: number) => {
   try {
-    const resp = await fetch(HOST + 'tasktext/' + task_id)
+    const resp = await fetch(HOST + 'tasktext/' + task_id, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     const data = await resp.json()
     return data
   } catch (err) {
     console.log(err)
   }
 }
-export const createTaskText = async ({
-  task_id,
-  title,
-  content,
-}: UpdateTaskText) => {
+export const createTaskText = async (
+  token: string,
+  { task_id, title, content }: UpdateTaskText
+) => {
   try {
     const resp = await fetch(HOST + 'tasktext/' + task_id, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         title: title,
@@ -304,16 +356,16 @@ export const createTaskText = async ({
     console.log(err)
   }
 }
-export const updateTaskText = async ({
-  task_id,
-  title,
-  content,
-}: UpdateTaskText) => {
+export const updateTaskText = async (
+  token: string,
+  { task_id, title, content }: UpdateTaskText
+) => {
   try {
     const resp = await fetch(HOST + 'tasktext/' + task_id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         title: title,
@@ -325,22 +377,30 @@ export const updateTaskText = async ({
   }
 }
 
-export const deleteTaskText = async (task_id: number) => {
+export const deleteTaskText = async (token: string, task_id: number) => {
   try {
     const resp = await fetch(HOST + 'tasktext/' + task_id, {
       method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
   } catch (err) {
     console.log(err)
   }
 }
 
-export const assignUsersToTask = async (task_id: number, user_ids: string) => {
+export const assignUsersToTask = async (
+  token: string,
+  task_id: number,
+  user_ids: string
+) => {
   try {
     const resp = await fetch(HOST + 'assign/' + task_id + '/' + user_ids, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     const data = await resp.json()
@@ -350,12 +410,13 @@ export const assignUsersToTask = async (task_id: number, user_ids: string) => {
   }
 }
 
-export const clearTaskAssign = async (task_id: number) => {
+export const clearTaskAssign = async (token: string, task_id: number) => {
   try {
     const resp = await fetch(HOST + 'clearassigned/' + task_id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
     const data = await resp.json()

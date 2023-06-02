@@ -16,7 +16,6 @@ urlpatterns = [
     # Create workspace
     path("tasks/<int:ws_id>", task_views.TaskView.as_view()),
     path("task/<int:task_id>", task_views.task_detail),
-    path("tasks", task_views.get_all_tasks),
     ## Headings
     path("heading/<int:ws_id>/<int:order>", stage_views.heading_detail),
     path("headings/<int:ws_id>", stage_views.HeadingView.as_view()),

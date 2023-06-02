@@ -1,6 +1,7 @@
-import React, { ReactNode, createContext, useState } from 'react'
+import React, { ReactNode, createContext, useContext, useState } from 'react'
 import { Task, Workspace } from '@/utils/Types'
 import { getTasksByWorkspace, getWorkspaceById } from '@/utils/Functions'
+import AuthContext from './AuthContext'
 
 interface MyProviderProps {
   children: ReactNode
@@ -23,10 +24,11 @@ const MyContext = createContext<ContextProps>({
 const DataProvider = ({ children }: MyProviderProps) => {
   const [tasks, setTasks] = useState<Task[][]>([])
   const [workspace, setWorkspace] = useState<Workspace | null>(null)
+  const { auth } = useContext(AuthContext)
 
   // Function to set tasks
   const handleSetTasks: ContextProps['setTasks'] = async (ws_id: number) => {
-    const data = await getTasksByWorkspace(ws_id)
+    const data = await getTasksByWorkspace(auth, ws_id)
     const taskMap: Task[][] = []
     if (workspace) {
       const nrOfStages = workspace.headings.length
@@ -47,7 +49,7 @@ const DataProvider = ({ children }: MyProviderProps) => {
   const handleSetWorkspace: ContextProps['setWorkspace'] = async (
     ws_id: number
   ) => {
-    const ws = await getWorkspaceById(ws_id)
+    const ws = await getWorkspaceById(auth, ws_id)
     setWorkspace(ws)
   }
 

@@ -1,4 +1,3 @@
-import Navbar from '@/components/Nav'
 import styles from './styles.module.css'
 import { StandardInput } from '@/components/StandardInput'
 import { StandardButton } from '@/components/StandardButton'

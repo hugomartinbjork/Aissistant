@@ -4,9 +4,13 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from .models import WorkSpace, Heading
 from .serializers import HeadingsSerializer
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+from .permissions import IsWorkspaceMember
+from rest_framework.exceptions import PermissionDenied
 
 class HeadingView(APIView):
+    permission_classes = [IsAuthenticated, IsWorkspaceMember]
     def get(self, request, ws_id):
         headings = Heading.objects.filter(workspace_id=ws_id)
         serializer = HeadingsSerializer(headings, many=True)
@@ -33,11 +37,14 @@ class HeadingView(APIView):
 
 
 @api_view(["GET", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated, IsWorkspaceMember])
 def heading_detail(request, ws_id, order):
     try:
         heading = Heading.objects.get(workspace_id=ws_id, order=order)
     except Heading.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     if request.method == "GET":
         serializer = HeadingsSerializer(heading)

@@ -2,15 +2,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .models import UserExtended, Task, WorkSpace
-from .serializers import UserExtendedSerializer, UserSerializer, TaskSerializer
+from .models import UserExtended, WorkSpace
+from .serializers import UserExtendedSerializer, UserSerializer
 from django.contrib.auth import authenticate, login
 from rest_framework.exceptions import AuthenticationFailed
 from knox.models import AuthToken
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+from .permissions import IsWorkspaceMember, UserIsAuth
+from rest_framework.exceptions import PermissionDenied
 # Create your views here.
 class Login(APIView):
     def post(self, request):
@@ -21,7 +23,6 @@ class Login(APIView):
         if not email or not password:
             raise AuthenticationFailed
         auth = authenticate(username=email, password=password)
-        print(auth)
         if auth is None:
             raise AuthenticationFailed
         login(request, auth)
@@ -38,6 +39,7 @@ class Login(APIView):
 
 
 class Users(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
             users = UserExtended.objects.all()
@@ -63,22 +65,28 @@ class Users(APIView):
 
 
 @api_view(["GET", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated, IsWorkspaceMember])
 def user_detail_by_ws(request, ws_id):
     try:
         ws = WorkSpace.objects.get(id=ws_id)
     except UserExtended.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
     if request.method == "GET":
         serializer = UserExtendedSerializer(ws.users.all(), many=True)
         return Response(serializer.data)
 
-
+@permission_classes([IsAuthenticated,UserIsAuth])
 @api_view(["GET"])
 def single_user(request, user_id):
     try:
         user = UserExtended.objects.get(user_id=user_id)
     except UserExtended.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+        
     if request.method == "GET":
         serializer = UserExtendedSerializer(user, many=False)
         return Response(serializer.data)

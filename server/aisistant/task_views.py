@@ -3,48 +3,56 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from .models import UserExtended, Task, WorkSpace, Heading, TaskText
-from .serializers import UserSerializer, TaskSerializer, TaskTextSerializer
-from django.contrib.auth import authenticate, login
-from rest_framework.exceptions import AuthenticationFailed
-from knox.models import AuthToken
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
+from .serializers import TaskSerializer, TaskTextSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+from .permissions import IsWorkspaceMember
+from rest_framework.exceptions import PermissionDenied
 
 
 @api_view(["GET", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated, IsWorkspaceMember])
 def task_detail(request, task_id):
     try:
         task = Task.objects.get(task_id=task_id)
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == "GET":
-        serializer = TaskSerializer(task, many=False)
-        return Response(serializer.data)
-
-    elif request.method == "PUT":
-        data = request.data
-        if data.get("order") is not None:
-            new_heading = Heading.objects.get(
-                workspace=task.workspace, order=data.get("order")
-            )
-            task.heading = new_heading
-        serializer = TaskSerializer(instance=task, data=data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
+        
+        if request.method == "GET":
+            serializer = TaskSerializer(task, many=False)
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "DELETE":
-        task.delete()
-        return Response("Successful deletion", status=status.HTTP_200_OK)
+        elif request.method == "PUT":
+            data = request.data
+            if data.get("order") is not None:
+                new_heading = Heading.objects.get(
+                    workspace=task.workspace, order=data.get("order")
+                )
+                task.heading = new_heading
+            serializer = TaskSerializer(instance=task, data=data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        elif request.method == "DELETE":
+            task.delete()
+            return Response("Successful deletion", status=status.HTTP_200_OK)
+        
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    except Task.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class TaskView(APIView):
+    permission_classes = [IsAuthenticated,IsWorkspaceMember]
     def get(self, request, ws_id):
-        tasks = Task.objects.filter(workspace_id=ws_id)
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
+        try:
+            tasks = Task.objects.filter(workspace_id=ws_id)
+            serializer = TaskSerializer(tasks, many=True)
+            return Response(serializer.data)
+        except PermissionDenied:
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
     """Post"""
 
@@ -67,20 +75,15 @@ class TaskView(APIView):
         return Response({"Serialization failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET"])
-def get_all_tasks(request):
-    if request.method == "GET":
-        tasks = Task.objects.all()
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
-
-
 @api_view(["GET", "POST", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated, IsWorkspaceMember])
 def task_text(request, task_id):
     try:
         task = Task.objects.get(task_id=task_id)
-    except:
+    except Task.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     if request.method == "GET":
         try:
@@ -116,12 +119,18 @@ def task_text(request, task_id):
         return Response("Successful deletion", status=status.HTTP_200_OK)
 
 
+
+
+
 @api_view(["PUT"])
+@permission_classes([IsAuthenticated, IsWorkspaceMember])
 def assign_user(request, task_id, user_id_list):
     try:
         task = Task.objects.get(task_id=task_id)
     except Task.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     user_ids = user_id_list.split(",")  # Split the user_id_list by comma
     user_ids = [
@@ -143,11 +152,14 @@ def assign_user(request, task_id, user_id_list):
 
 
 @api_view(["PUT"])
+@permission_classes([IsAuthenticated, IsWorkspaceMember])
 def clear_assigned_user(request, task_id):
     try:
         task = Task.objects.get(task_id=task_id)
     except Task.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     if request.method == "PUT":
         task.assigned.clear()  # Clear the assigned relation

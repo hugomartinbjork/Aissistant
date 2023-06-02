@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['aissistant-production.up.railway.app']
 CORS_ORIGIN_WHITELIST = ['https://aissistant-official.vercel.app']
-CSRF_TRUSTED_ORIGINS = ['aissistant-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://aissistant-production.up.railway.app']
 # Application definition
 
 INSTALLED_APPS = [
@@ -94,12 +94,6 @@ WSGI_APPLICATION = "server.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -109,7 +103,8 @@ DATABASES = {
         'HOST': os.environ.get('HOST'),
         'PORT': os.environ.get('PORT'),
         'CONN_MAX_AGE': 60,
-    }}
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 

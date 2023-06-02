@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import WritersBlock from '@/components/WritersBlock'
 import { useRouter } from 'next/router'
-import WithAuth from '@/context/WithAuth'
+import withAuth from '@/context/WithAuth'
 import AuthContext from '@/context/AuthContext'
-import Dropdown from '@/components/Dropdown'
-import { MyContext } from '@/context/DataProvider'
 import { getTaskText, updateTaskText, createTaskText } from '@/utils/Functions'
 import { UpdateTaskText } from '@/utils/Types'
 import {
@@ -22,12 +20,14 @@ function TaskWriter() {
   const [title, setTitle] = useState<string>('')
   const [taskHasText, setTaskHasText] = useState<boolean>(false)
   const [open, setOpen] = useState<boolean>(false)
+  const { auth } = useContext(AuthContext)
+
   const {
     query: { taskId },
   } = useRouter()
 
   const fetchData = async () => {
-    const data = await getTaskText(parseInt(taskId as string))
+    const data = await getTaskText(auth, parseInt(taskId as string))
     if (data) {
       setTaskHasText(true)
       setText(data.content)
@@ -49,9 +49,9 @@ function TaskWriter() {
       content: content,
     }
     if (taskHasText) {
-      await updateTaskText(data)
+      await updateTaskText(auth, data)
     } else {
-      await createTaskText(data)
+      await createTaskText(auth, data)
     }
     setOpen(true)
   }
@@ -118,4 +118,4 @@ function TaskWriter() {
   )
 }
 
-export default WithAuth(TaskWriter)
+export default withAuth(TaskWriter)

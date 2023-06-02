@@ -2,19 +2,18 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from .models import UserExtended, Task, WorkSpace, Heading
-from .serializers import UserSerializer, TaskSerializer, WorkSpaceSerializer
-from django.contrib.auth import authenticate, login
-from rest_framework.exceptions import AuthenticationFailed
-from knox.models import AuthToken
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
+from .models import UserExtended, WorkSpace, Heading
+from .serializers import WorkSpaceSerializer
+from rest_framework.permissions import IsAuthenticated
+from .permissions import UserIsAuth, IsWorkspaceMember
+from rest_framework.decorators import permission_classes
+from rest_framework.exceptions import PermissionDenied
 
 # Create your views here.
 
 class WorkSpaceView(APIView):
     '''Group.'''
-    
+    permission_classes = [IsAuthenticated, UserIsAuth]
     def get(self, request, user_id):
         '''Get.'''
         if request.method == 'GET':
@@ -62,12 +61,15 @@ class WorkSpaceView(APIView):
     
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated,UserIsAuth])
 def ws_leave(request, ws_id, user_id):
     '''workspaces/<int:ws_id>'''
     try:
         ws = WorkSpace.objects.get(id=ws_id)
-    except:
+    except WorkSpace.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
     
  ## Leave WS
     if request.method == 'PUT':
@@ -84,15 +86,17 @@ def ws_leave(request, ws_id, user_id):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        
+    
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated,IsWorkspaceMember ])
 def ws_detail(request, ws_id):
     '''workspace/<int:ws_id>'''
     try:
         ws = WorkSpace.objects.get(id=ws_id)
-    except:
+    except WorkSpace.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
     '''Get'''
     if request.method == 'GET':
         serializer = WorkSpaceSerializer(ws, many= False)
@@ -120,12 +124,14 @@ def ws_detail(request, ws_id):
         return Response('Sucessful deletion', status=200)
     
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated, IsWorkspaceMember])
 def ws_headings(request, ws_id):
-
     try:
         ws = WorkSpace.objects.get(id=ws_id)
-    except:
+    except WorkSpace.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except PermissionDenied:
+        return Response(status=status.HTTP_403_FORBIDDEN)
     '''Get'''
     if request.method == 'GET':
         serializer = WorkSpaceSerializer(ws, many= True)
