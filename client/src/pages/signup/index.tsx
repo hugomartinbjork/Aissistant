@@ -7,7 +7,6 @@ import { signUpUser } from '@/utils/Functions'
 import { useRouter } from 'next/router'
 
 export default function Signup() {
-  // Dialog related consts
   const [open, setOpen] = useState<boolean>(false)
   const handleOpen = () => {
     setOpen(true)
@@ -95,11 +94,7 @@ export default function Signup() {
           </span>
           <div className={styles.bottom}>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <StandardButton
-              text="Create account"
-              margin="10px"
-              // onClick={() => handleSubmit}
-            />
+            <StandardButton text="Create account" margin="10px" />
           </div>
         </form>
       </div>

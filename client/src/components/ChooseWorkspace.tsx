@@ -3,15 +3,15 @@ import React, { useState } from 'react'
 
 interface Props {
   workspaces: Workspace[]
-  onClick?: any
+  onClick: (workspace: Workspace) => void
 }
 
 const ChooseWorkspace = (props: Props) => {
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace>()
 
-  const handleWorkspaceChange = (workspace: any) => {
+  const handleWorkspaceChange = (workspace: Workspace | undefined) => {
     setSelectedWorkspace(workspace)
-    props.onClick(workspace)
+    workspace && props.onClick(workspace)
   }
 
   return (
@@ -36,7 +36,7 @@ const ChooseWorkspace = (props: Props) => {
         }}
       >
         <option value="">Choose workspace</option>
-        {props.workspaces.map((ws: any) => (
+        {props.workspaces.map((ws: Workspace) => (
           <option key={ws.id} value={ws.id}>
             {ws.name}
           </option>

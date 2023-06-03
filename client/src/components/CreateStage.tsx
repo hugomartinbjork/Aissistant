@@ -17,17 +17,17 @@ import AuthContext from '@/context/AuthContext'
 interface Props {
   open: boolean
   ws_id: number
-  handleClose: any
-  handleSubmit: any
+  handleClose: () => void
+  handleSubmit: () => void
 }
 
 export const CreateStage = (props: Props) => {
   const { setWorkspace } = useContext(MyContext)
   const { auth } = useContext(AuthContext)
-  const uploadStage = async (e: any) => {
+  const uploadStage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const text = e.target.heading.value
-    const order = e.target.order.value
+    const text = e.currentTarget.heading.value
+    const order = e.currentTarget.order.value
     const ws_id = props.ws_id
     await createStage(auth, { ws_id, text, order })
     setWorkspace(ws_id)

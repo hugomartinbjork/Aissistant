@@ -8,7 +8,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <DataProvider>
-        <Navbar title="DefaultIcon" />
+        <Navbar />
         <Component {...pageProps} />
       </DataProvider>
     </AuthProvider>

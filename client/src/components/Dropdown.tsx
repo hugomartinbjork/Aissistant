@@ -12,7 +12,7 @@ import { WorkspacePutL } from '@/utils/Types'
 interface Props {
   open: boolean
   ws_id: number
-  handleClose: any
+  handleClose: () => void
   handleSubmit: any
 }
 

@@ -20,11 +20,11 @@ import AuthContext from '@/context/AuthContext'
 
 interface Props {
   task: Task
-  handleOnDrag?: any
+  handleOnDrag: (e: React.DragEvent, taskId: number) => void
 }
 
 const TaskCard = (props: Props) => {
-  const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
+  const { workspace, setWorkspace } = useContext(MyContext)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const router = useRouter()
   const [assignedUserNames, setAssignedUserNames] = useState<string[]>([])

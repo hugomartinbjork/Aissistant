@@ -99,7 +99,9 @@ export default withAuth(function Board() {
                       heading={heading}
                       tasks={tasks}
                       handleOnDrag={handleOnDrag}
-                      handleOnDrop={(e: any) => handleOnDrop(e, heading.order)}
+                      handleOnDrop={(e: React.DragEvent) =>
+                        handleOnDrop(e, heading.order)
+                      }
                     />
                   ))}
             </div>

@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
 
 export default function Home() {
   const [currentTextIndex, setCurrentTextIndex] = useState<number>(0)
   const textElements: string[] = ['Productivity', 'Elegance', 'Greatness']
-  const { auth, user } = useAuth()
 
   const showNextText = () => {
     setCurrentTextIndex((currentTextIndex + 1) % textElements.length)

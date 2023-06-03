@@ -25,14 +25,14 @@ import AuthContext from '@/context/AuthContext'
 interface Props {
   open: boolean
   ws_id?: number
-  handleClose: any
+  handleClose: () => void
   handleSubmit?: any
   header?: string
 }
 
 export const InviteDialog = (props: Props) => {
-  const { tasks, setTasks, workspace, setWorkspace } = useContext(MyContext)
-  const { auth, user } = useContext(AuthContext)
+  const { workspace, setWorkspace } = useContext(MyContext)
+  const { auth } = useContext(AuthContext)
   const [users, setUsers] = useState<MiniUser[]>([])
   const [wsUsers, setWsUsers] = useState<MiniUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<MiniUser[]>([])
@@ -65,14 +65,10 @@ export const InviteDialog = (props: Props) => {
     filterUsers()
   }, [searchValue, users, wsUsers])
 
-  // Inside the InviteDialog component
-
   const addUser = async (user_id: number) => {
     if (workspace) {
       await updateWorkspaceA(auth, { user_id, ws_id: workspace.id })
       setWorkspace(workspace.id)
-
-      // Fetch the updated workspace users after adding a new user
       const updatedUsers = await getWorkspacesUsers(auth, workspace.id)
       setWsUsers(updatedUsers)
     }

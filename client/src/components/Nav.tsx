@@ -1,29 +1,25 @@
-import Link from "next/link";
-import Image from "next/image";
-import logo from "../assets/loggo2.png";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { logout } from "@/hooks/logout";
-import { useRouter } from "next/router";
+import Link from 'next/link'
+import Image from 'next/image'
+import logo from '../assets/loggo2.png'
+import { useEffect, useState } from 'react'
+import { useAuth } from '@/hooks/useAuth'
+import { logout } from '@/hooks/logout'
+import { useRouter } from 'next/router'
 
-interface NavbarProps {
-  title: string;
-}
+const Navbar = () => {
+  const { auth } = useAuth()
+  const [lastBoard, setLastBoard] = useState<string>('')
 
-const Navbar: React.FC<NavbarProps> = ({ title }) => {
-  const { auth } = useAuth();
-  const [lastBoard, setLastBoard] = useState<string>("");
-
-  const { asPath } = useRouter();
+  const { asPath } = useRouter()
 
   useEffect(() => {
-    if (asPath === "/board") {
-      setLastBoard("");
+    if (asPath === '/board') {
+      setLastBoard('')
     }
-    if (asPath.startsWith("/board/")) {
-      setLastBoard(asPath);
+    if (asPath.startsWith('/board/')) {
+      setLastBoard(asPath)
     }
-  }, [asPath]);
+  }, [asPath])
 
   return (
     <nav>
@@ -35,7 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
               alt="logo"
               width={50}
               height={35}
-              style={{ paddingTop: "25%" }}
+              style={{ paddingTop: '25%' }}
             />
           </Link>
         </div>
@@ -44,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
             <Link href="/writer" className="navlink">
               Workbench
             </Link>
-            <Link href={lastBoard ? lastBoard : "/board"} className="navlink">
+            <Link href={lastBoard ? lastBoard : '/board'} className="navlink">
               Board
             </Link>
             <Link href="/about" className="navlink">
@@ -66,7 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
         )}
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

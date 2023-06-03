@@ -10,7 +10,7 @@ import React from 'react'
 
 interface Props {
   open: boolean
-  handleClose: any
+  handleClose: () => void
 }
 export const TermsDialog = (props: Props) => {
   return (

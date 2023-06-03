@@ -4,7 +4,7 @@ import { StandardButton } from './StandardButton'
 import Link from 'next/link'
 
 interface Props {
-  onSubmit?: any
+  onSubmit?: (e: any) => Promise<void>
 }
 
 export const LoginForm = (props: Props) => {

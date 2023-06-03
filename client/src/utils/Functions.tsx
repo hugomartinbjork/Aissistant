@@ -1,15 +1,11 @@
 import {
   PostTask,
   SignUpData,
-  Task,
-  TaskText,
   UpdateTask,
-  Workspace,
   WorkspacePost,
   PostHeading,
   WorkspacePutL,
   WorkspacePutA,
-  PostTaskText,
   UpdateTaskText,
 } from './Types'
 

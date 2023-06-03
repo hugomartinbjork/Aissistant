@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import WritersBlock from '@/components/WritersBlock'
 import WithAuth from '@/context/WithAuth'
 

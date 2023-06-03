@@ -17,9 +17,9 @@ import AuthContext from '@/context/AuthContext'
 
 interface Props {
   open: boolean
-  handleClose: any
-  handleSubmit: any
-  handleReset: any
+  handleClose: () => void
+  handleSubmit: (user_ids: string) => Promise<void>
+  handleReset: (task_id: number) => Promise<void>
   task: Task
   confirmAssign: boolean
   confirmClear: boolean

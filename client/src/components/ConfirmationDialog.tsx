@@ -11,8 +11,8 @@ import { StandardButton } from './StandardButton'
 
 interface Props {
   open: boolean
-  handleClose: any
-  handleSubmit?: any
+  handleClose: () => void
+  handleSubmit: () => void
   input_title?: string
   input_todo?: string
   header?: string

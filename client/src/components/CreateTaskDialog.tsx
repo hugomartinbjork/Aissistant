@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   Box,
   Dialog,
@@ -6,30 +6,30 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-} from "@mui/material";
-import CloseSharpIcon from "@mui/icons-material/CloseSharp";
-import { StandardButton } from "./StandardButton";
-import { StandardInput } from "./StandardInput";
+} from '@mui/material'
+import CloseSharpIcon from '@mui/icons-material/CloseSharp'
+import { StandardButton } from './StandardButton'
+import { StandardInput } from './StandardInput'
 
 interface Props {
-  open: boolean;
-  handleClose: any;
-  handleSubmit: any;
-  input_title?: string;
-  input_todo?: string;
-  header?: string;
+  open: boolean
+  handleClose: () => void
+  handleSubmit: any
+  input_title?: string
+  input_todo?: string
+  header?: string
 }
 
 export const CreateTaskDialog = (props: Props) => {
-  const header = props.header || "Create a new task";
-  const [titleValue, setTitleValue] = useState<string>(props.input_title || "");
-  const [todoValue, setTodoValue] = useState<string>(props.input_todo || "");
+  const header = props.header || 'Create a new task'
+  const [titleValue, setTitleValue] = useState<string>(props.input_title || '')
+  const [todoValue, setTodoValue] = useState<string>(props.input_todo || '')
 
   const uploadTask = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    props.handleSubmit(titleValue, todoValue);
-    props.handleClose();
-  };
+    e.preventDefault()
+    props.handleSubmit(titleValue, todoValue)
+    props.handleClose()
+  }
 
   return (
     <Dialog
@@ -37,25 +37,25 @@ export const CreateTaskDialog = (props: Props) => {
       onClose={props.handleClose}
       PaperProps={{
         style: {
-          maxHeight: "600px",
-          height: "100%",
-          maxWidth: "500px",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "5px",
-          border: "2px solid white",
-          backgroundColor: "black",
-          color: "white",
+          maxHeight: '600px',
+          height: '100%',
+          maxWidth: '500px',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '5px',
+          border: '2px solid white',
+          backgroundColor: 'black',
+          color: 'white',
         },
       }}
     >
       <DialogTitle
         style={{
           fontFamily: "'Raleway', sans-serif",
-          color: "white",
-          fontSize: "25px",
+          color: 'white',
+          fontSize: '25px',
         }}
       >
         {header}
@@ -63,26 +63,26 @@ export const CreateTaskDialog = (props: Props) => {
         <IconButton
           aria-label="close"
           onClick={props.handleClose}
-          style={{ position: "absolute", top: 0, right: 0, color: "white" }}
+          style={{ position: 'absolute', top: 0, right: 0, color: 'white' }}
         >
           <CloseSharpIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent
         style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          alignItems: 'center',
         }}
       >
         <form id="taskform" onSubmit={uploadTask}>
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              justifyContent: "space-between",
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              justifyContent: 'space-between',
             }}
           >
             <StandardInput
@@ -112,5 +112,5 @@ export const CreateTaskDialog = (props: Props) => {
         <StandardButton form="taskform" text="Submit" />
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}

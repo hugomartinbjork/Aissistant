@@ -12,9 +12,6 @@ interface Props {
   margin?: string
 }
 
-/**
- * Reusable input field
- */
 export const StandardInput = (props: Props) => {
   return (
     <div style={{ margin: props.margin || 0 }}>

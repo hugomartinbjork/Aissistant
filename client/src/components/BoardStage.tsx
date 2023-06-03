@@ -9,7 +9,7 @@ import AuthContext from '@/context/AuthContext'
 interface Props {
   heading: Heading
   tasks?: Task[][]
-  handleOnDrag?: any
+  handleOnDrag: (e: React.DragEvent, taskId: number) => void
   handleOnDrop?: any
 }
 

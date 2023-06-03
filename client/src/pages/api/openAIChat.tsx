@@ -2,11 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { Configuration, CreateCompletionRequest, OpenAIApi } from 'openai'
 
 const MAX_TOKENS = 3000
-//encode uri component i fetch anropet
 const config = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 })
-// Fixa limit per användare
 const openai = new OpenAIApi(config)
 const model: CreateCompletionRequest['model'] = 'text-davinci-003'
 
